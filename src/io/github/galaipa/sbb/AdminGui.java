@@ -5,6 +5,7 @@ import static io.github.galaipa.sbb.ArenaManager.getManager;
 import static io.github.galaipa.sbb.InGameGui.myInventory;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -36,6 +37,16 @@ public class AdminGui implements Listener{
             ItemStack b = new ItemStack(material, amount, (short) id);
             ItemMeta metaB = b.getItemMeta();                          
             metaB.setDisplayName(name);
+            b.setItemMeta(metaB);
+            return b;
+    }
+    public static ItemStack item(Material material, int id, int amount,String name,String lore){
+            ItemStack b = new ItemStack(material, amount, (short) id);
+            ItemMeta metaB = b.getItemMeta();                          
+            metaB.setDisplayName(name);
+            List<String> lorea = new ArrayList<>();
+            lorea.add(lore);
+            metaB.setLore(lorea);
             b.setItemMeta(metaB);
             return b;
     }
@@ -82,11 +93,11 @@ public class AdminGui implements Listener{
           public void onInventoryClick2(PlayerInteractEvent event){
               if(event.getAction() == Action.RIGHT_CLICK_AIR || event.getAction() == Action.RIGHT_CLICK_BLOCK ){
                   Player p = event.getPlayer();
-                  if(p.getItemInHand().getType() == Material.STAINED_CLAY){
+                  if(p.getItemInHand().getType() == Material.STAINED_CLAY && p.getItemInHand().hasItemMeta() && p.getItemInHand().getItemMeta().hasDisplayName() ){
                         String izena = p.getItemInHand().getItemMeta().getDisplayName();
                         ItemStack i = p.getItemInHand();
                         Inventory inve = p.getInventory();
-                      if(setup == true){
+                      if(setup){
                            if (izena.equalsIgnoreCase(ChatColor.GREEN + "Set building time")){
                                event.setCancelled(true);
                                time = i.getAmount()+1;

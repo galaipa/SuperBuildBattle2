@@ -47,27 +47,27 @@ public class GameListener implements Listener {
                               String izena = p.getItemInHand().getItemMeta().getDisplayName();
                                 if (izena.equalsIgnoreCase(ChatColor.RED + getTr("35"))){
                                     gehituBotoa(p,0,a);
-                                    p.sendMessage(ChatColor.GREEN +  getTr("39") + ": " + izena );
+                                    p.sendMessage(ChatColor.GREEN +  getTr("40") + ": " + izena );
                                     }
                                 else if (izena.equalsIgnoreCase(ChatColor.RED + getTr("33"))){
                                     gehituBotoa(p,1,a);
-                                    p.sendMessage(ChatColor.GREEN +  getTr("39") + ": " + izena );
+                                    p.sendMessage(ChatColor.GREEN +  getTr("40") + ": " + izena );
                                     }
                                 else if (izena.equalsIgnoreCase(ChatColor.RED + getTr("32"))){
                                     gehituBotoa(p,2,a);
-                                    p.sendMessage(ChatColor.GREEN +  getTr("39") + ": " + izena );
+                                    p.sendMessage(ChatColor.GREEN +  getTr("40") + ": " + izena );
                                     }
                                 else if (izena.equalsIgnoreCase(ChatColor.GREEN + getTr("31"))){
                                     gehituBotoa(p,3,a);
-                                    p.sendMessage(ChatColor.GREEN +  getTr("39") + ": " + izena );
+                                    p.sendMessage(ChatColor.GREEN +  getTr("40") + ": " + izena );
                                     }
                                 else if (izena.equalsIgnoreCase(ChatColor.GREEN + getTr("30"))){
                                     gehituBotoa(p,4,a);
-                                    p.sendMessage(ChatColor.GREEN +  getTr("39") + ": " + izena );
+                                    p.sendMessage(ChatColor.GREEN +  getTr("40") + ": " + izena );
                                     }
                                 else if (izena.equalsIgnoreCase(ChatColor.GREEN + getTr("36"))){
                                     gehituBotoa(p,5,a);
-                                    p.sendMessage(ChatColor.GREEN +  getTr("30") + ": " + izena );
+                                    p.sendMessage(ChatColor.GREEN +  getTr("40") + ": " + izena );
                                     }
                         }
               }
@@ -168,7 +168,7 @@ public class GameListener implements Listener {
                         if(ArenaManager.WorldGuarda == true){ WorldGuardOptional.WGregionRM(a.getJolakaria(e.getPlayer()).getID(),a.getID());}
                     }
                     //Taldea ezabatu
-                    ArenaManager.getManager().removePlayer(e.getPlayer());
+                    ArenaManager.getManager().removePlayer(e.getPlayer(),true);
                     if(a.players.isEmpty()){
                         a.reset();
                     }

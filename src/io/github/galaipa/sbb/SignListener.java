@@ -42,7 +42,7 @@ public class SignListener implements Listener {
                     if(sign.getLine(2).equals(ChatColor.DARK_RED + plugin.getTr("28"))) {
                         ArenaManager.getManager().addPlayer(p,p.getLocation());
                     }else if(sign.getLine(2).equals(ChatColor.DARK_RED+ plugin.getTr("38"))) {
-                        ArenaManager.getManager().removePlayer(p);
+                        ArenaManager.getManager().removePlayer(p,true);
                     }
                 }
             }

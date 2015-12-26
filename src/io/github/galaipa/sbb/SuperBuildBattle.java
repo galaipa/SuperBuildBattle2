@@ -25,13 +25,12 @@ public class SuperBuildBattle extends JavaPlugin {
         getConfig().options().copyDefaults(true);
         getConfig().options().copyHeader(true);
         saveConfig();
+        
         getServer().getPluginManager().registerEvents(new SignListener(this),this);
         getServer().getPluginManager().registerEvents(new GameListener(),this);
         getServer().getPluginManager().registerEvents(new AdminGui(),this);
         getServer().getPluginManager().registerEvents(new InGameGui(),this);
         loadTranslations();
-        
-        
         if (Bukkit.getPluginManager().getPlugin("PlayerPoints") != null && getConfig().getBoolean("Rewards.PlayerPoints.Enabled")) {
             PlayerPointsOptional.hookPlayerPoints(Bukkit.getPluginManager().getPlugin("PlayerPoints"));
             ArenaManager.PlayerPoints = true;
@@ -72,7 +71,8 @@ public class SuperBuildBattle extends JavaPlugin {
                 }else if (args[0].equalsIgnoreCase("join")){
                     ArenaManager.getManager().addPlayer(p,p.getLocation());
                 }else if (args[0].equalsIgnoreCase("leave")){
-                        ArenaManager.getManager().removePlayer(p);
+                        ArenaManager.getManager().removePlayer(p,true);
+                        
                         return true;
                 }
                 else{
@@ -85,6 +85,7 @@ public class SuperBuildBattle extends JavaPlugin {
                 }else if(args.length == 0){
                     ArenaManager.admin = true;
                     AdminGui.arenaGui(p);
+                    p.sendMessage(ChatColor.YELLOW + "[Build Battle] " +ChatColor.GREEN + "Use the items in your hand to setup SuperBuildBattle" );
                 }else if (args[0].equalsIgnoreCase("start")){
                     p.sendMessage(ChatColor.YELLOW + "[Build Battle] " +ChatColor.GREEN + "You forced the game to start" );
                     ArenaManager.getManager().getArena(Integer.parseInt(args[1])).start();
@@ -93,7 +94,11 @@ public class SuperBuildBattle extends JavaPlugin {
                     //reset();
                 } else if(args[0].equalsIgnoreCase("reset")){
                     
-                }else if (args[0].equalsIgnoreCase("topic")){
+                }else if (args[0].equalsIgnoreCase("addtopic")){
+                    if(args.length < 2){
+                        sender.sendMessage(ChatColor.GREEN + "/bbadmin addtopic [topic]");
+                        return true;
+                    }
                     String gaia = args[1];
                     List<String> themes = getConfig().getStringList("Themes");
                     themes.add(gaia);
@@ -102,6 +107,10 @@ public class SuperBuildBattle extends JavaPlugin {
                     sender.sendMessage(ChatColor.GREEN + "Added a new topic: " + gaia );
                     return true;
                 }else if (args[0].equalsIgnoreCase("removetopic")){
+                    if(args.length < 2){
+                        sender.sendMessage(ChatColor.GREEN + "/bbadmin removetopic [topic] ");
+                        return true;
+                    }
                     List<String> themes = getConfig().getStringList("Themes");
                     String gaia = args[1];
                     themes.remove(gaia);
@@ -115,11 +124,15 @@ public class SuperBuildBattle extends JavaPlugin {
                     sender.sendMessage(ChatColor.GREEN + "Topics: " );
                     String s = "";
                     for(String g : themes){
-                        s = s + ", " + g;
+                        s = s  + g+  ", ";
                     }
                     sender.sendMessage(s);
                     return true;
-                }else if (args[0].equalsIgnoreCase("cmdwhitelist")){
+                }else if (args[0].equalsIgnoreCase("topic")){
+                    sender.sendMessage(ChatColor.GREEN + "/bbadmin addtopic-removetopic-topiclist" );
+                    return true;
+                }
+                    else if (args[0].equalsIgnoreCase("cmdwhitelist")){
                     ArrayList<String> list = (ArrayList<String>) getConfig().getStringList("CmdWhitelist");
                     if (args[1].equalsIgnoreCase("add") && args.length>=2){
                         list.add(args[2]);  

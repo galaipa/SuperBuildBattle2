@@ -307,8 +307,9 @@ public class Arena {
         Iterator<Jokalaria> it = players.iterator();
         while(it.hasNext()){
             Jokalaria j = it.next();
-           ArenaManager.getManager().removePlayer(j.getPlayer());
+           ArenaManager.getManager().removePlayer(j.getPlayer(),false);
        }
+       players.clear();
        SpigBoard = null;
        inGame = false;
        time = 0;

@@ -15,6 +15,7 @@ import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
 import org.bukkit.entity.Player;
+import org.bukkit.scoreboard.ScoreboardManager;
 
 public class ArenaManager {
     public static Boolean admin = false;
@@ -24,8 +25,6 @@ public class ArenaManager {
     List<Arena> arenas = new ArrayList<>();
     SuperBuildBattle plugin = SuperBuildBattle.getInstance();
     public static Boolean PlayerPoints,Vault,Command,WorldGuarda;
-    public ArenaManager(){
-    }
     
     public static ArenaManager getManager(){
         return am;
@@ -64,7 +63,7 @@ public class ArenaManager {
         }
         p.sendMessage(ChatColor.YELLOW + "[Build Battle] " +ChatColor.RED + "All arenas are full or inGame");
     }
-    public void removePlayer(Player p){
+    public void removePlayer(Player p,Boolean bo){
         if(getArena(p) != null){
         Arena arena = getArena(p);
         Jokalaria j2 = arena.getJolakaria(p);
@@ -74,9 +73,16 @@ public class ArenaManager {
            p.setGameMode(GameMode.SURVIVAL);
            p.teleport(j2.getPreSpawn());
            p.sendMessage(ChatColor.GREEN +"[Build Battle] " + ChatColor.RED + getTr("3"));
+           ScoreboardManager manager = Bukkit.getScoreboardManager();
+           p.setScoreboard(manager.getNewScoreboard());
            j2.returnInv();
            arena.Broadcast(ChatColor.GREEN +"[Build Battle] " + ChatColor.RED + p.getName() + " " + getTr("4"));
-           arena.getPlayers().remove(j2);
+           if(bo){
+               arena.getPlayers().remove(j2);
+               if(arena.getPlayers().isEmpty()){
+                   arena.reset();
+               }
+           }
     }else{
             p.sendMessage(ChatColor.GREEN +"[Build Battle] " + ChatColor.RED + getTr("5"));
             }
@@ -143,13 +149,13 @@ public class ArenaManager {
         int minPlayers = plugin.getConfig().getInt("Arenas." + Integer.toString(id) +".MinPlayers");
         int time = plugin.getConfig().getInt("Arenas." + Integer.toString(id) +".Time");
         int votingTime = plugin.getConfig().getInt("Arenas." + Integer.toString(id) +".VotingTime");
-        debug("Load:"+ maxPlayers + minPlayers + time + votingTime);
+        debug("Load:"+ maxPlayers + ","+ minPlayers + ","+ time + ","+ votingTime);
         String w =  plugin.getConfig().getString("Arenas." + Integer.toString(id) +".Spawn.World");
         Double x =  plugin.getConfig().getDouble("Arenas." + Integer.toString(id) +".Spawn.X");
         Double y =  plugin.getConfig().getDouble("Arenas." + Integer.toString(id) +".Spawn.Y");
         Double z =  plugin.getConfig().getDouble("Arenas." + Integer.toString(id) +".Spawn.Z");
-        Location lobbya = new Location(Bukkit.getServer().getWorld(w),x,y,z);
-        debug("Load spawn");
+        Location lobbya = new Location(plugin.getServer().getWorld(w),x,y,z);
+        debug("Load spawn: " + lobbya.toString());
         Cuboid[] cuboidList = new Cuboid[maxPlayers];
         for(int i=1;i <= maxPlayers;i++){
             String w1 = plugin.getConfig().getString("Arenas." + Integer.toString(id) +".Region." + Integer.toString(i) + ".World");
@@ -160,15 +166,18 @@ public class ArenaManager {
             Double y2 = plugin.getConfig().getDouble("Arenas." + Integer.toString(id) +".Region." + Integer.toString(i) + ".Max.y");
             Double z2 = plugin.getConfig().getDouble("Arenas." + Integer.toString(id) +".Region." + Integer.toString(i) + ".Max.z");
             debug("Load points");
+            debug(w1);
             Location l1 = new Location(plugin.getServer().getWorld(w1), x1, y1, z1);
             debug(l1.toString());
             Location l2 = new Location(plugin.getServer().getWorld(w1), x2, y2, z2);
             debug(l2.toString());
             Cuboid c = new Cuboid(l1,l2);
+            debug("Cuboid: " + c.toString());
             cuboidList[i-1] = c;
-            debug("Load Cuboid: " + i);
+            debug("Loaded cuboid: " + i);
             if(WorldGuarda){
                 WorldGuardOptional.WGregion(plugin.getServer().getWorld(w1),x1,y1,z1,x2,y2,z2,i,id);
+                debug("WG: " + i);
             }
         }
         Arena a = new Arena(id,minPlayers,maxPlayers,time,votingTime,lobbya,cuboidList);
@@ -188,7 +197,7 @@ public class ArenaManager {
             Double x = plugin.getConfig().getDouble("Lobby.X");
             Double y= plugin.getConfig().getDouble("Lobby.Y");
             Double z = plugin.getConfig().getDouble("Lobby.Z");
-            Location l = new Location(plugin.getServer().getWorld(w), x, y, z);
+            Location l = new Location(Bukkit.getWorld(w), x, y, z);
             lobby = l;
             }
     }

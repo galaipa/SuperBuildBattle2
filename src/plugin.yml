@@ -3,7 +3,7 @@ main: io.github.galaipa.sbb.SuperBuildBattle
 version: 8.0
 author: Galaipa 
 description: BuildBattle minigame plugin
-softdepend: [WorldEdit,WorldGuard,Vault,PlayerPoints,BannerMaker]
+softdepend: [WorldEdit,WorldGuard,Vault,PlayerPoints]
 commands:
   buildbattle:
     description: BuildBattle main command
@@ -22,5 +22,5 @@ permissions:
     description: Perm to use all user commands
     default: true
   bb.admin:
-    description: Perm to use /buildbattleadmin commands
+    description: Perm to use all admin commands
     default: op
