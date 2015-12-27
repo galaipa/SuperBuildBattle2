@@ -82,7 +82,10 @@ public class Arena {
         }
     }
 
-    public void start() {
+    private volatile boolean running = false;
+    public synchronized void start() {
+        if(running) return;
+        running = true;
         assignArenas();
         //  Broadcast("AssignArenas OK");
         theme = ArenaManager.getManager().getRandomTheme();
@@ -317,6 +320,7 @@ public class Arena {
     }
 
     public void reset() {
+        running = false;
         Iterator<ArenaPlayer> it = players.iterator();
         while (it.hasNext()) {
             ArenaPlayer j = it.next();
@@ -330,7 +334,6 @@ public class Arena {
         currentVotedPlayer = null;
         players.clear();
         botoa.clear();
-
     }
 
     public void minimunReached() {
