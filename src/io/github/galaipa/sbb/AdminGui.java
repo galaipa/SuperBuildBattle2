@@ -76,8 +76,8 @@ public class AdminGui implements Listener {
 
     public static void SetupInventory(Player p) {
         Inventory inv = p.getInventory();
-        inv.addItem(item(Material.STAINED_CLAY, 3, 1, ChatColor.GREEN + "Set building time"));
-        inv.addItem(item(Material.STAINED_CLAY, 3, 1, ChatColor.GREEN + "Set voting time"));
+        inv.addItem(item(Material.STAINED_CLAY, 3, 1, ChatColor.GREEN + "Set building time (Minutes)"));
+        inv.addItem(item(Material.STAINED_CLAY, 3, 1, ChatColor.GREEN + "Set voting time (Seconds)"));
         inv.addItem(item(Material.STAINED_CLAY, 3, 1, ChatColor.GREEN + "Set minimum players"));
         inv.addItem(item(Material.STAINED_CLAY, 3, 1, ChatColor.GREEN + "Set maximum players"));
         inv.addItem(item(Material.STAINED_CLAY, 3, 1, ChatColor.GREEN + "Set lobby spawnpoint"));
@@ -114,9 +114,9 @@ public class AdminGui implements Listener {
                         p.updateInventory();
                     } else if (izena.equalsIgnoreCase(ChatColor.GREEN + "Set voting time")) {
                         event.setCancelled(true);
-                        timeVote = i.getAmount() + 1;
+                        timeVote = i.getAmount() + 5;
                         inve.remove(i);
-                        i.setAmount(i.getAmount() + 1);
+                        i.setAmount(timeVote);
                         inve.addItem(i);
                         p.updateInventory();
                     } else if (izena.equalsIgnoreCase(ChatColor.GREEN + "Set minimum players")) {
