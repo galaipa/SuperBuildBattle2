@@ -29,11 +29,9 @@ public class SuperBuildBattle extends JavaPlugin {
 
     public static String getTr(String path) {
         if (yaml.getString(path) == null) {
-            String msg = "Message missing in the lang file. Contact Admin (N." + path + ")";
-            return msg;
+            return "Message missing in the lang file. Contact Admin (N." + path + ")";
         } else {
-            String msg = ChatColor.translateAlternateColorCodes('&', yaml.getString(path));
-            return msg;
+            return ChatColor.translateAlternateColorCodes('&', yaml.getString(path));
         }
     }
 
@@ -107,9 +105,7 @@ public class SuperBuildBattle extends JavaPlugin {
             } else if (args[0].equalsIgnoreCase("stop")) {
                 p.sendMessage(ChatColor.YELLOW + "[Build Battle] " + ChatColor.GREEN + "You forced the game to stop");
                 //reset();
-            } else if (args[0].equalsIgnoreCase("reset")) {
-
-            } else if (args[0].equalsIgnoreCase("addtopic")) {
+            }else if (args[0].equalsIgnoreCase("addtopic")) {
                 if (args.length < 2) {
                     sender.sendMessage(ChatColor.GREEN + "/bbadmin addtopic [topic]");
                     return true;
