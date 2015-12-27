@@ -23,7 +23,6 @@ public class InGameGui implements Listener {
     public static Inventory myInventory;
     public static Inventory skullsInventory;
     public static Map<String, String> skulls = new HashMap<>();
-    SuperBuildBattle plugin = SuperBuildBattle.getInstance();
 
     public static void userGui() {
         myInventory = Bukkit.createInventory(null, 9, "InGame Menu");
@@ -88,7 +87,7 @@ public class InGameGui implements Listener {
     public void userGuiUse(InventoryClickEvent event) {
         if (getManager().getArena((Player) event.getWhoClicked()) != null) {
             Arena a = getManager().getArena((Player) event.getWhoClicked());
-            if (a.inGame == true) {
+            if (a.inGame) {
                 Inventory inventory = event.getInventory();
                 if (inventory.getName().equals(myInventory.getName()) && event.getCurrentItem() != null) {
                     ItemStack clicked = event.getCurrentItem();
@@ -130,7 +129,6 @@ public class InGameGui implements Listener {
                 }*/ else if (izena.equalsIgnoreCase(ChatColor.GREEN + "Skulls")) {
                         event.setCancelled(true);
                         player.openInventory(skullsInventory);
-                    } else {
                     }
                 }
                 if (inventory.getName().equals(skullsInventory.getName()) && event.getCurrentItem() != null) {

@@ -75,18 +75,18 @@ public class ArenaManager {
         for (Arena a : arenas) {
             // p.sendMessage(a.inGame.toString());
             //  p.sendMessage(Integer.toString(a.players.size()));
-            if (a.inGame) {
-            } else if (a.players.size() == a.maxPlayers) {
-            } else {
-                a.Broadcast(ChatColor.YELLOW + "[Build Battle] " + ChatColor.GREEN + p.getName() + " " + getTr("10"));
-                ArenaPlayer j = new ArenaPlayer(p, a.getID(), l);
-                a.getPlayers().add(j);
-                //  p.sendMessage(ChatColor.YELLOW + "[Build Battle] " +ChatColor.GREEN +"You joined arena " + a.getID() + "/" + arenas.size());
-                p.sendMessage(ChatColor.YELLOW + "[Build Battle] " + ChatColor.GREEN + getTr("39").replace("{1}", j.getID() + "/" + a.maxPlayers).replace("{2}", a.getID() + "/" + arenas.size()));
-                if (a.players.size() == a.minPlayers) {
-                    a.minimunReached();
+            if (!a.inGame) {
+                if (a.players.size() != a.maxPlayers) {
+                    a.Broadcast(ChatColor.YELLOW + "[Build Battle] " + ChatColor.GREEN + p.getName() + " " + getTr("10"));
+                    ArenaPlayer j = new ArenaPlayer(p, a.getID(), l);
+                    a.getPlayers().add(j);
+                    //  p.sendMessage(ChatColor.YELLOW + "[Build Battle] " +ChatColor.GREEN +"You joined arena " + a.getID() + "/" + arenas.size());
+                    p.sendMessage(ChatColor.YELLOW + "[Build Battle] " + ChatColor.GREEN + getTr("39").replace("{1}", j.getID() + "/" + a.maxPlayers).replace("{2}", a.getID() + "/" + arenas.size()));
+                    if (a.players.size() == a.minPlayers) {
+                        a.minimunReached();
+                    }
+                    return;
                 }
-                return;
             }
         }
         p.sendMessage(ChatColor.YELLOW + "[Build Battle] " + ChatColor.RED + "All arenas are full or inGame");
@@ -240,16 +240,14 @@ public class ArenaManager {
             Double x = plugin.getConfig().getDouble("Lobby.X");
             Double y = plugin.getConfig().getDouble("Lobby.Y");
             Double z = plugin.getConfig().getDouble("Lobby.Z");
-            Location l = new Location(Bukkit.getWorld(w), x, y, z);
-            lobby = l;
+            lobby = new Location(Bukkit.getWorld(w), x, y, z);
         }
     }
 
     public String getRandomTheme() {
         List<String> themes = plugin.getConfig().getStringList("Themes");
         Random random = new Random();
-        String gaia = themes.get(random.nextInt(themes.size()));
-        return gaia;
+        return themes.get(random.nextInt(themes.size()));
     }
 
     //REWARDS
