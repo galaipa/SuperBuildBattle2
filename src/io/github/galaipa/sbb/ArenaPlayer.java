@@ -9,15 +9,14 @@ import org.bukkit.inventory.ItemStack;
 
 
 public class ArenaPlayer {
-    public Player Jokalaria;
+    public Player player;
     ItemStack[] armor;
     ItemStack[] inv;
     private int id;
-    private Arena arena;
     private Player p;
     private int point;
     private Cuboid cuboid;
-    private Location spawnpoint, startLoc;
+    private Location startLoc;
     private World world;
     private int type;
     private byte data;
@@ -25,7 +24,7 @@ public class ArenaPlayer {
     public ArenaPlayer(Player p2, int arenaID, Location l) {
         p = p2;
         point = 0;
-        arena = ArenaManager.getManager().getArena(arenaID);
+        Arena arena = ArenaManager.getManager().getArena(arenaID);
         id = arena.getPlayers().size() + 1;
         inv = p.getInventory().getContents();
         armor = p.getInventory().getArmorContents();
@@ -85,9 +84,8 @@ public class ArenaPlayer {
     }
 
     public Location getSpawnPoint() {
-        Location v = cuboid.getCenter();
-        spawnpoint = v;
-        return spawnpoint;
+        Location spawnpoint = cuboid.getCenter();
+        return spawnpoint.getWorld().getHighestBlockAt(spawnpoint).getLocation();
     }
 
     public Location getPreSpawn() {
@@ -95,11 +93,11 @@ public class ArenaPlayer {
     }
 
     public void addPlayer(Player p) {
-        Jokalaria = p;
+        player = p;
     }
 
     public void removePlayer(Player p) {
-        Jokalaria = null;
+        player = null;
     }
 
     public String getPlayerString() {
@@ -113,12 +111,7 @@ public class ArenaPlayer {
     }
 
     public Boolean checkPlayer(Player p) {
-        Player pa = Jokalaria;
-        if (p == pa) {
-            return true;
-        } else {
-            return false;
-        }
+        return player.equals(p);
     }
 }
 

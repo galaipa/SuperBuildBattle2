@@ -196,7 +196,7 @@ public class Arena {
             p.updateInventory();
         }
         new BukkitRunnable() {
-            int zenbat = 0;
+            int current = 0;
             String timer = "";
             String reset = "";
             String taldekideak = "";
@@ -213,11 +213,11 @@ public class Arena {
 
                 botoa.clear();
 
-                if (zenbat >= players.size()) {
+                if (current >= players.size()) {
                     cancel();
                     winner();
                 } else {
-                    currentVotedPlayer = getPlayer(zenbat + 1);
+                    currentVotedPlayer = getPlayer(current);
 
                     for (ArenaPlayer j : getPlayers()) {
                         Player p = j.getPlayer();
@@ -225,14 +225,14 @@ public class Arena {
                         sendTitleAll(20, 40, 20, currentVotedPlayer.getPlayerString(), "");
                         p.getWorld().playSound(p.getLocation(), Sound.NOTE_PLING, 10, 1);
                     }
-                    String taldeakideak = ChatColor.GREEN + getTr("19") + ": " + ChatColor.YELLOW + currentVotedPlayer.getPlayerString();
+                    String scoreboardstring = ChatColor.GREEN + getTr("19") + ": " + ChatColor.YELLOW + currentVotedPlayer.getPlayerString();
                     SpigboardEntry score = SpigBoard.getEntry("taldeakideak2");
                     if (score != null) {
-                        score.update(taldeakideak);
+                        score.update(scoreboardstring);
                     } else {
-                        SpigBoard.add("taldeakideak2", taldeakideak, 2);
+                        SpigBoard.add("taldeakideak2", scoreboardstring, 2);
                     }
-                    if (zenbat == 0) {
+                    if (current == 0) {
                         Broadcast(ChatColor.GREEN + "-----------------------------------------------");
                         Broadcast(ChatColor.BOLD.toString());
                         Broadcast(ChatColor.WHITE + "                         Voting");
@@ -244,7 +244,7 @@ public class Arena {
                     } else {
                         Broadcast(ChatColor.YELLOW + getTr("19") + ": " + currentVotedPlayer.getPlayerString());
                     }
-                    zenbat++;
+                    current++;
                 }
 
             }
@@ -252,57 +252,57 @@ public class Arena {
     }
 
     public void winner() {
-        ArenaPlayer taldeIrabazlea = null;
-        ArenaPlayer talde2 = null;
-        ArenaPlayer talde3 = null;
+        ArenaPlayer winner1 = null;
+        ArenaPlayer winner2 = null;
+        ArenaPlayer winner3 = null;
         List<Winners> users = new ArrayList<>();
         for (ArenaPlayer t : players) {
             users.add(new Winners(t, t.getPoint()));
         }
         Collections.sort(users);
         for (Winners n : users) {
-            if (taldeIrabazlea == null) {
-                taldeIrabazlea = n.getName();
-            } else if (talde2 == null) {
-                talde2 = n.getName();
-            } else if (talde3 == null) {
-                talde3 = n.getName();
+            if (winner1 == null) {
+                winner1 = n.getName();
+            } else if (winner2 == null) {
+                winner2 = n.getName();
+            } else if (winner3 == null) {
+                winner3 = n.getName();
             }
         }
-        final ArenaPlayer t = taldeIrabazlea;
+        final ArenaPlayer t = winner1;
         Broadcast(ChatColor.GREEN + "------------------------------------------------");
         Broadcast(ChatColor.BOLD.toString());
         Broadcast(ChatColor.WHITE + "                         Super Build Battle");
         Broadcast(ChatColor.GREEN + "       " + getTr("20"));
-        Broadcast(ChatColor.YELLOW + "1: " + ChatColor.GREEN + taldeIrabazlea.getPlayerString() + "(" + taldeIrabazlea.getPoint() + " " + getTr("24") + ")");
-        if (players.size() > 1) {
-            Broadcast(ChatColor.YELLOW + "2: " + ChatColor.GREEN + talde2.getPlayerString() + "(" + talde2.getPoint() + " " + getTr("24") + ")");
+        Broadcast(ChatColor.YELLOW + "1: " + ChatColor.GREEN + winner1.getPlayerString() + "(" + winner1.getPoint() + " " + getTr("24") + ")");
+        if (winner2 != null) {
+            Broadcast(ChatColor.YELLOW + "2: " + ChatColor.GREEN + winner2.getPlayerString() + "(" + winner2.getPoint() + " " + getTr("24") + ")");
         }
-        if (players.size() > 2) {
-            Broadcast(ChatColor.YELLOW + "3: " + ChatColor.GREEN + talde3.getPlayerString() + "(" + talde3.getPoint() + " " + getTr("24") + ")");
+        if (winner3 != null) {
+            Broadcast(ChatColor.YELLOW + "3: " + ChatColor.GREEN + winner3.getPlayerString() + "(" + winner3.getPoint() + " " + getTr("24") + ")");
         }
         Broadcast(ChatColor.BOLD.toString());
         Broadcast(ChatColor.GREEN + "------------------------------------------------");
-        ArenaManager.getManager().Rewards(taldeIrabazlea, "Winner");
+        ArenaManager.getManager().Rewards(winner1, "Winner");
         if (players.size() > 1) {
-            ArenaManager.getManager().Rewards(talde2, "Second");
+            ArenaManager.getManager().Rewards(winner2, "Second");
         }
         if (players.size() > 2) {
-            ArenaManager.getManager().Rewards(talde3, "Third");
+            ArenaManager.getManager().Rewards(winner3, "Third");
         }
         for (ArenaPlayer j : players) {
             Player p = j.getPlayer();
-            p.teleport(taldeIrabazlea.getSpawnPoint());
-            if (p != taldeIrabazlea.getPlayer() && p != talde2.getPlayer() && p != talde3.getPlayer()) {
+            p.teleport(winner1.getSpawnPoint());
+            if (p != winner1.getPlayer() && (winner2 == null || p != winner2.getPlayer()) && (winner3 == null || p != winner3.getPlayer())) {
                 ArenaManager.getManager().Rewards(p, "Rest");
             }
         }
+        final ArenaPlayer finalWinner = winner1;
         new BukkitRunnable() {
             int zenbat = 0;
-
             @Override
             public void run() {
-                Firework f = (Firework) t.getWorld().spawn(t.getCuboid().getCenter(), Firework.class);
+                Firework f = finalWinner.getWorld().spawn(t.getCuboid().getCenter(), Firework.class);
                 FireworkMeta fm = f.getFireworkMeta();
                 fm.addEffect(FireworkEffect.builder().flicker(false).trail(true).with(FireworkEffect.Type.STAR).withColor(Color.GREEN).withFade(Color.BLUE).build());
                 fm.setPower(3);

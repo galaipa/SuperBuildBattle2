@@ -22,7 +22,6 @@ public class SuperBuildBattle extends JavaPlugin {
     public static String translation;
     public static YamlConfiguration yaml;
     public Economy econ = null;
-    private File languageFile;
 
     public static SuperBuildBattle getInstance() {
         return JavaPlugin.getPlugin(SuperBuildBattle.class);
@@ -212,7 +211,7 @@ public class SuperBuildBattle extends JavaPlugin {
         copyTranslation("custom");
         translation = getConfig().getString("Language");
         if (translation.equalsIgnoreCase("custom")) {
-            languageFile = new File(getDataFolder() + File.separator + "lang" + File.separator + translation + ".yml");
+            File languageFile = new File(getDataFolder() + File.separator + "lang" + File.separator + translation + ".yml");
             yaml = YamlConfiguration.loadConfiguration(languageFile);
         } else {
             InputStream defaultStream = getResource(translation + ".yml");

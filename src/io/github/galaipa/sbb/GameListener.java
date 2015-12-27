@@ -27,7 +27,7 @@ public class GameListener implements Listener {
     public void onInventoryClick(PlayerInteractEvent event) {
         if (getManager().getArena(event.getPlayer()) != null) {
             Arena a = getManager().getArena(event.getPlayer());
-            if (a.voting == true) {
+            if (a.voting) {
                 if (event.getAction() == Action.RIGHT_CLICK_AIR || event.getAction() == Action.RIGHT_CLICK_BLOCK) {
                     Player p = event.getPlayer();
                     event.setCancelled(true);
@@ -63,8 +63,6 @@ public class GameListener implements Listener {
                     }
                 }
             }
-        } else {
-
         }
 
     }
@@ -82,7 +80,7 @@ public class GameListener implements Listener {
     public void PlayerCommand(PlayerCommandPreprocessEvent event) {
         if (getManager().getArena(event.getPlayer()) != null) {
             Arena a = getManager().getArena(event.getPlayer());
-            if (a.inGame == true) {
+            if (a.inGame) {
                 Player p = event.getPlayer();
                 ArrayList<String> list = (ArrayList<String>) plugin.getConfig().getStringList("CmdWhitelist");
                 for (String s : list) {
@@ -162,7 +160,7 @@ public class GameListener implements Listener {
             plugin.saveConfig();
             if (a.inGame) {
                 a.getArenaPlayer(e.getPlayer()).resetArenas();
-                if (ArenaManager.WorldGuarda == true) {
+                if (ArenaManager.WorldGuarda) {
                     WorldGuardOptional.WGregionRM(a.getArenaPlayer(e.getPlayer()).getID(), a.getID());
                 }
             }
@@ -195,14 +193,12 @@ public class GameListener implements Listener {
         if (getManager().getArena(e.getPlayer()) != null) {
             a = getManager().getArena(e.getPlayer());
             if (a.inGame && !a.voting) {
-                if (a.getArenaPlayer(e.getPlayer()).getCuboid().contains(e.getPlayer().getLocation())) {
-                } else {
+                if (!a.getArenaPlayer(e.getPlayer()).getCuboid().contains(e.getPlayer().getLocation())) {
                     e.getPlayer().teleport(a.getArenaPlayer(e.getPlayer()).getSpawnPoint());
                 }
             } else if (a.inGame) {
                 if (a.contains(e.getPlayer())) {
-                    if (a.currentVotedPlayer.getCuboid().contains(e.getPlayer().getLocation())) {
-                    } else {
+                    if (!a.currentVotedPlayer.getCuboid().contains(e.getPlayer().getLocation())) {
                         e.getPlayer().teleport(a.currentVotedPlayer.getSpawnPoint());
                     }
                 }
