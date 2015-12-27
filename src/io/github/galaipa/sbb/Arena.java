@@ -17,7 +17,7 @@ import static io.github.galaipa.sbb.SuperBuildBattle.getTr;
 public class Arena {
     public int id;
     public int maxPlayers, minPlayers, time, votingtime;
-    List<Jokalaria> players = new ArrayList<>();
+    List<ArenaPlayer> players = new ArrayList<>();
     HashMap<Player, Integer> botoa = new HashMap<>();
     Location lobby;
     Cuboid[] cuboid;
@@ -25,7 +25,7 @@ public class Arena {
     String theme;
     Spigboard SpigBoard;
     String timer = null;
-    Jokalaria jabea;
+    ArenaPlayer currentVotedPlayer;
     SuperBuildBattle plugin = SuperBuildBattle.getInstance();
 
     public Arena(int id, int minPlayers, int maxPlayers, int time, int votingTime, Location lobby, Cuboid[] cuboid) {
@@ -42,33 +42,42 @@ public class Arena {
         return this.id;
     }
 
-    public List<Jokalaria> getPlayers() {
+    public List<ArenaPlayer> getPlayers() {
         return this.players;
     }
 
-    public Jokalaria getJolakaria(Player p) {
-        for (Jokalaria j : players) {
-            if (j.getPlayer() == p) {
+    public ArenaPlayer getArenaPlayer(Player p) {
+        for (ArenaPlayer j : players) {
+            if (j.getPlayer().equals(p)) {
                 return j;
             }
         }
         return null;
     }
 
+    public boolean contains(Player p){
+        for (ArenaPlayer j : players) {
+            if (j.getPlayer().equals(p)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     public void assignArenas() {
-        for (Jokalaria j2 : players) {
+        for (ArenaPlayer j2 : players) {
             j2.addRegion(cuboid[j2.getID() - 1]);
         }
     }
 
     public void Broadcast(String msg) {
-        for (Jokalaria j : players) {
+        for (ArenaPlayer j : players) {
             j.getPlayer().sendMessage(msg);
         }
     }
 
     public void sendTitleAll(Integer fadeIn, Integer stay, Integer fadeOut, String title, String subtitle) {
-        for (Jokalaria j : players) {
+        for (ArenaPlayer j : players) {
             ArenaManager.sendTitle(j.getPlayer(), fadeIn, stay, fadeOut, title, subtitle);
         }
     }
@@ -83,7 +92,7 @@ public class Arena {
 
             @Override
             public void run() {
-                for (Jokalaria j : getPlayers()) {
+                for (ArenaPlayer j : getPlayers()) {
                     Player p = j.getPlayer();
                     p.setLevel(countdown);
                     //   p.sendMessage(ChatColor.GREEN + " " + countdown);
@@ -94,22 +103,24 @@ public class Arena {
                 if (countdown < 0) {
                     Broadcast(ChatColor.GREEN + "-----------------------------------------------");
                     Broadcast(ChatColor.BOLD.toString());
-                    Broadcast(ChatColor.WHITE + "                         �lSuper Build Battle");
+                    Broadcast(ChatColor.WHITE + "                         Super Build Battle");
                     Broadcast(ChatColor.GREEN + "       " + getTr("15") + " " + time + " " + getTr("16"));
                     Broadcast(ChatColor.GREEN + "         " + getTr("17") + ": " + ChatColor.YELLOW + theme);
                     Broadcast(ChatColor.BOLD.toString());
                     Broadcast(ChatColor.GREEN + "-----------------------------------------------");
                     sendTitleAll(20, 40, 20, ChatColor.GREEN + theme, getTr("14"));
-                    for (Jokalaria j : getPlayers()) {
+                    for (ArenaPlayer j : getPlayers()) {
                         Player p = j.getPlayer();
                         p.teleport(j.getSpawnPoint());
-                        p.setGameMode(GameMode.CREATIVE);
-                        p.getWorld().playSound(p.getLocation(), Sound.NOTE_PLING, 10, 1);
-                        InGameGui.giveUserGui(p);
-                        InGameGui.userGui();
-                        if (plugin.getConfig().getBoolean("StartCommand.Enabled")) {
-                            plugin.getServer().dispatchCommand(plugin.getServer().getConsoleSender(), (plugin.getConfig().getString("StartCommand.Command")).replace("$player$", p.getName()));
-                        }
+                        Bukkit.getScheduler().runTaskLater(plugin, ()->{
+                            p.setGameMode(GameMode.CREATIVE);
+                            p.getWorld().playSound(p.getLocation(), Sound.NOTE_PLING, 10, 1);
+                            InGameGui.giveUserGui(p);
+                            InGameGui.userGui();
+                            if (plugin.getConfig().getBoolean("StartCommand.Enabled")) {
+                                plugin.getServer().dispatchCommand(plugin.getServer().getConsoleSender(), (plugin.getConfig().getString("StartCommand.Command")).replace("$player$", p.getName()));
+                            }
+                        }, 5L);
                     }
                     inGame = true;
                     cancel();
@@ -122,7 +133,7 @@ public class Arena {
     public void Building() {
         SpigBoard = new Spigboard(ChatColor.DARK_GREEN.BOLD + "BuildBattle");
         SpigBoard.add("theme", ChatColor.GREEN + getTr("17") + ": " + ChatColor.YELLOW + theme, 4);
-        for (Jokalaria j : getPlayers()) {
+        for (ArenaPlayer j : getPlayers()) {
             SpigBoard.add(j.getPlayer());
         }
         new BukkitRunnable() {
@@ -169,7 +180,7 @@ public class Arena {
 
     public void voting() {
         SpigBoard.remove(SpigBoard.getEntry("timer"));
-        for (Jokalaria j : getPlayers()) {
+        for (ArenaPlayer j : getPlayers()) {
             Player p = j.getPlayer();
             Inventory inv = p.getInventory();
             inv.clear();
@@ -192,28 +203,29 @@ public class Arena {
 
             @Override
             public void run() {
-                for (Jokalaria j2 : players) {
-                    if (botoa.containsKey(j2.getPlayer())) {
-                        if (getPlayer(zenbat) != null) {
-                            getPlayer(zenbat).addPoint(botoa.get(j2.getPlayer()));
+                if(currentVotedPlayer != null){
+                    for (ArenaPlayer j2 : players) {
+                        if (botoa.containsKey(j2.getPlayer())) {
+                            currentVotedPlayer.addPoint(botoa.get(j2.getPlayer()));
                         }
                     }
                 }
+
                 botoa.clear();
 
                 if (zenbat >= players.size()) {
                     cancel();
                     winner();
                 } else {
-                    jabea = getPlayer(zenbat + 1);
+                    currentVotedPlayer = getPlayer(zenbat + 1);
 
-                    for (Jokalaria j : getPlayers()) {
+                    for (ArenaPlayer j : getPlayers()) {
                         Player p = j.getPlayer();
-                        p.teleport(jabea.getSpawnPoint());
-                        sendTitleAll(20, 40, 20, jabea.getPlayerString(), "");
+                        p.teleport(currentVotedPlayer.getSpawnPoint());
+                        sendTitleAll(20, 40, 20, currentVotedPlayer.getPlayerString(), "");
                         p.getWorld().playSound(p.getLocation(), Sound.NOTE_PLING, 10, 1);
                     }
-                    String taldeakideak = ChatColor.GREEN + getTr("19") + ": " + ChatColor.YELLOW + jabea.getPlayerString();
+                    String taldeakideak = ChatColor.GREEN + getTr("19") + ": " + ChatColor.YELLOW + currentVotedPlayer.getPlayerString();
                     SpigboardEntry score = SpigBoard.getEntry("taldeakideak2");
                     if (score != null) {
                         score.update(taldeakideak);
@@ -223,14 +235,14 @@ public class Arena {
                     if (zenbat == 0) {
                         Broadcast(ChatColor.GREEN + "-----------------------------------------------");
                         Broadcast(ChatColor.BOLD.toString());
-                        Broadcast(ChatColor.WHITE + "                         �lVoting");
+                        Broadcast(ChatColor.WHITE + "                         Voting");
                         Broadcast(ChatColor.GREEN + "        " + getTr("21"));
                         Broadcast(ChatColor.BOLD.toString());
                         Broadcast(ChatColor.GREEN + "-----------------------------------------------");
-                        Broadcast(ChatColor.YELLOW + getTr("19") + ": " + jabea.getPlayerString());
+                        Broadcast(ChatColor.YELLOW + getTr("19") + ": " + currentVotedPlayer.getPlayerString());
 
                     } else {
-                        Broadcast(ChatColor.YELLOW + getTr("19") + ": " + jabea.getPlayerString());
+                        Broadcast(ChatColor.YELLOW + getTr("19") + ": " + currentVotedPlayer.getPlayerString());
                     }
                     zenbat++;
                 }
@@ -240,11 +252,11 @@ public class Arena {
     }
 
     public void winner() {
-        Jokalaria taldeIrabazlea = null;
-        Jokalaria talde2 = null;
-        Jokalaria talde3 = null;
+        ArenaPlayer taldeIrabazlea = null;
+        ArenaPlayer talde2 = null;
+        ArenaPlayer talde3 = null;
         List<Winners> users = new ArrayList<>();
-        for (Jokalaria t : players) {
+        for (ArenaPlayer t : players) {
             users.add(new Winners(t, t.getPoint()));
         }
         Collections.sort(users);
@@ -257,17 +269,17 @@ public class Arena {
                 talde3 = n.getName();
             }
         }
-        final Jokalaria t = taldeIrabazlea;
+        final ArenaPlayer t = taldeIrabazlea;
         Broadcast(ChatColor.GREEN + "------------------------------------------------");
         Broadcast(ChatColor.BOLD.toString());
-        Broadcast(ChatColor.WHITE + "                         �lSuper Build Battle");
+        Broadcast(ChatColor.WHITE + "                         Super Build Battle");
         Broadcast(ChatColor.GREEN + "       " + getTr("20"));
-        Broadcast(ChatColor.YELLOW + "1�: " + ChatColor.GREEN + taldeIrabazlea.getPlayerString() + "(" + taldeIrabazlea.getPoint() + " " + getTr("24") + ")");
+        Broadcast(ChatColor.YELLOW + "1: " + ChatColor.GREEN + taldeIrabazlea.getPlayerString() + "(" + taldeIrabazlea.getPoint() + " " + getTr("24") + ")");
         if (players.size() > 1) {
-            Broadcast(ChatColor.YELLOW + "2�: " + ChatColor.GREEN + talde2.getPlayerString() + "(" + talde2.getPoint() + " " + getTr("24") + ")");
+            Broadcast(ChatColor.YELLOW + "2: " + ChatColor.GREEN + talde2.getPlayerString() + "(" + talde2.getPoint() + " " + getTr("24") + ")");
         }
         if (players.size() > 2) {
-            Broadcast(ChatColor.YELLOW + "3�: " + ChatColor.GREEN + talde3.getPlayerString() + "(" + talde3.getPoint() + " " + getTr("24") + ")");
+            Broadcast(ChatColor.YELLOW + "3: " + ChatColor.GREEN + talde3.getPlayerString() + "(" + talde3.getPoint() + " " + getTr("24") + ")");
         }
         Broadcast(ChatColor.BOLD.toString());
         Broadcast(ChatColor.GREEN + "------------------------------------------------");
@@ -278,7 +290,7 @@ public class Arena {
         if (players.size() > 2) {
             ArenaManager.getManager().Rewards(talde3, "Third");
         }
-        for (Jokalaria j : players) {
+        for (ArenaPlayer j : players) {
             Player p = j.getPlayer();
             p.teleport(taldeIrabazlea.getSpawnPoint());
             if (p != taldeIrabazlea.getPlayer() && p != talde2.getPlayer() && p != talde3.getPlayer()) {
@@ -305,9 +317,9 @@ public class Arena {
     }
 
     public void reset() {
-        Iterator<Jokalaria> it = players.iterator();
+        Iterator<ArenaPlayer> it = players.iterator();
         while (it.hasNext()) {
-            Jokalaria j = it.next();
+            ArenaPlayer j = it.next();
             ArenaManager.getManager().removePlayer(j.getPlayer(), false);
         }
         players.clear();
@@ -315,7 +327,7 @@ public class Arena {
         inGame = false;
         time = 0;
         voting = false;
-        jabea = null;
+        currentVotedPlayer = null;
         players.clear();
         botoa.clear();
 
@@ -340,8 +352,8 @@ public class Arena {
         }.runTaskTimer(plugin, 0, 20);
     }
 
-    public Jokalaria getPlayer(int id) {
-        for (Jokalaria j : players) {
+    public ArenaPlayer getPlayer(int id) {
+        for (ArenaPlayer j : players) {
             if (j.getID() == id) {
                 return j;
             }

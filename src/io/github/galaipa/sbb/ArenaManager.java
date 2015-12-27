@@ -79,7 +79,7 @@ public class ArenaManager {
             } else if (a.players.size() == a.maxPlayers) {
             } else {
                 a.Broadcast(ChatColor.YELLOW + "[Build Battle] " + ChatColor.GREEN + p.getName() + " " + getTr("10"));
-                Jokalaria j = new Jokalaria(p, a.getID(), l);
+                ArenaPlayer j = new ArenaPlayer(p, a.getID(), l);
                 a.getPlayers().add(j);
                 //  p.sendMessage(ChatColor.YELLOW + "[Build Battle] " +ChatColor.GREEN +"You joined arena " + a.getID() + "/" + arenas.size());
                 p.sendMessage(ChatColor.YELLOW + "[Build Battle] " + ChatColor.GREEN + getTr("39").replace("{1}", j.getID() + "/" + a.maxPlayers).replace("{2}", a.getID() + "/" + arenas.size()));
@@ -95,16 +95,19 @@ public class ArenaManager {
     public void removePlayer(Player p, Boolean bo) {
         if (getArena(p) != null) {
             Arena arena = getArena(p);
-            Jokalaria j2 = arena.getJolakaria(p);
+            ArenaPlayer j2 = arena.getArenaPlayer(p);
             if (arena.inGame) {
                 j2.resetArenas();
             }
-            p.setGameMode(GameMode.SURVIVAL);
-            p.teleport(j2.getPreSpawn());
-            p.sendMessage(ChatColor.GREEN + "[Build Battle] " + ChatColor.RED + getTr("3"));
-            ScoreboardManager manager = Bukkit.getScoreboardManager();
-            p.setScoreboard(manager.getNewScoreboard());
-            j2.returnInv();
+            Bukkit.getScheduler().runTaskLater(plugin, ()->{
+                p.setGameMode(GameMode.SURVIVAL);
+                p.teleport(j2.getPreSpawn());
+                p.sendMessage(ChatColor.GREEN + "[Build Battle] " + ChatColor.RED + getTr("3"));
+                ScoreboardManager manager = Bukkit.getScoreboardManager();
+                p.setScoreboard(manager.getNewScoreboard());
+                j2.returnInv();
+            }, 5L);
+
             arena.Broadcast(ChatColor.GREEN + "[Build Battle] " + ChatColor.RED + p.getName() + " " + getTr("4"));
             if (bo) {
                 arena.getPlayers().remove(j2);
@@ -120,7 +123,7 @@ public class ArenaManager {
 
     public Arena getArena(Player p) {
         for (Arena a : arenas) {
-            for (Jokalaria j : a.players) {
+            for (ArenaPlayer j : a.players) {
                 if (j.getPlayer() == p) {
                     return a;
                 }
@@ -257,7 +260,7 @@ public class ArenaManager {
         }
     }
 
-    public void Rewards(Jokalaria t, String s) {
+    public void Rewards(ArenaPlayer t, String s) {
         Player p = t.getPlayer();
         if (Vault) {
             giveVaultRewards(p.getPlayer(), plugin.getConfig().getInt("Rewards.Vault." + s));

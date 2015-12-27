@@ -93,7 +93,7 @@ public class InGameGui implements Listener {
                 if (inventory.getName().equals(myInventory.getName()) && event.getCurrentItem() != null) {
                     ItemStack clicked = event.getCurrentItem();
                     Player player = (Player) event.getWhoClicked();
-                    Jokalaria t = a.getJolakaria(player);
+                    ArenaPlayer t = a.getArenaPlayer(player);
                     String izena;
                     if (clicked.hasItemMeta() && clicked.getItemMeta().hasDisplayName()) {
                         izena = clicked.getItemMeta().getDisplayName();

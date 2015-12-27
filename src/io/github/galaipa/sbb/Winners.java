@@ -2,10 +2,10 @@ package io.github.galaipa.sbb;
 
 
 public class Winners implements Comparable<Winners> {
-    Jokalaria team;
+    ArenaPlayer team;
     int score;
 
-    public Winners(Jokalaria name, int score) {
+    public Winners(ArenaPlayer name, int score) {
         this.team = name;
         this.score = score;
     }
@@ -14,7 +14,7 @@ public class Winners implements Comparable<Winners> {
         return user.getScore() - this.getScore();
     }
 
-    public Jokalaria getName() {
+    public ArenaPlayer getName() {
         return team;
     }
 
