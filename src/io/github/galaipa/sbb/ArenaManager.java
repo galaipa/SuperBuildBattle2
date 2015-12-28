@@ -64,12 +64,12 @@ public class ArenaManager {
         return null;
     }
 
-    public void debug(String msg) {
+    public static void debug(String msg) {
         if (debug) {
             System.out.println(msg);
         }
     }
-
+    
     public void addPlayer(Player p, Location l) {
         if(getArena(p) != null){
             //TODO translate in your language

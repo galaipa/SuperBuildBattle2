@@ -16,6 +16,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
+import org.bukkit.plugin.PluginDescriptionFile;
 
 
 public class SuperBuildBattle extends JavaPlugin {
@@ -82,23 +83,32 @@ public class SuperBuildBattle extends JavaPlugin {
         Player p = (Player) sender;
         if (cmd.getName().equalsIgnoreCase("buildbattle")) {
             if (!p.hasPermission("bb.user")) {
-                sender.sendMessage(ChatColor.GREEN + "[Build Battle] " + ChatColor.GREEN + "Super Build Battle by Galaipa");
+                sender.sendMessage(ChatColor.GREEN + "[Build Battle] " + ChatColor.GREEN + "Super Build Battle by Galapia, moloco, and community");
             } else if (args.length < 1) {
-                ArenaManager.sendTitle(p, 20, 40, 20, "&2Super Build Battle", "By Galaipa");
-                sender.sendMessage(ChatColor.GREEN + "[Build Battle] " + ChatColor.RED + "Super Build Battle by Galaipa");
+                ArenaManager.sendTitle(p, 20, 40, 20, "&2Super Build Battle", "by Galapia, moloco, and community");
+                sender.sendMessage(ChatColor.GREEN + "[Build Battle] " + ChatColor.RED + "Super Build Battle by Galapia, moloco, and community");
             } else if (args[0].equalsIgnoreCase("join")) {
                 ArenaManager.getManager().addPlayer(p, p.getLocation());
             } else if (args[0].equalsIgnoreCase("leave")) {
                 ArenaManager.getManager().removePlayer(p, true);
-
                 return true;
-            } else {
-                sender.sendMessage(ChatColor.GREEN + "[Build Battle] " + ChatColor.RED + getTr("2"));
+            } else if (args[0].equalsIgnoreCase("help")) {
+                sender.sendMessage(ChatColor.GREEN + "[Build Battle] " + ChatColor.BLUE + "User commands:");
+                sender.sendMessage(ChatColor.YELLOW + "/bb join");
+                sender.sendMessage(ChatColor.YELLOW + "/bb leave");
+                sender.sendMessage(ChatColor.GREEN + "[Build Battle] " + ChatColor.YELLOW + "Admin commands:");
+                sender.sendMessage(ChatColor.YELLOW + "/bbadmin version");
+                sender.sendMessage(ChatColor.YELLOW + "/bbadmin (To enter setup)");
+                sender.sendMessage(ChatColor.YELLOW + "/bbadmin addtopic-removetopic-topiclist");
+            }
+            else {
+                sender.sendMessage(ChatColor.GREEN + "[Build Battle] " + ChatColor.RED + "Unknown command");
             }
 
         } else if (cmd.getName().equalsIgnoreCase("buildbattleadmin")) {
             if (!p.hasPermission("bb.admin")) {
                 sender.sendMessage(ChatColor.GREEN + "[Build Battle] " + ChatColor.RED + "You don't have permission");
+                return true;
             } else if (args.length == 0) {
                 ArenaManager.admin = true;
                 AdminGui.arenaGui(p);
@@ -109,7 +119,13 @@ public class SuperBuildBattle extends JavaPlugin {
             } else if (args[0].equalsIgnoreCase("stop")) {
                 p.sendMessage(ChatColor.YELLOW + "[Build Battle] " + ChatColor.GREEN + "You forced the game to stop");
                 //reset();
-            }else if (args[0].equalsIgnoreCase("addtopic")) {
+            }else if (args[0].equalsIgnoreCase("version")) {
+                PluginDescriptionFile pdfFile = this.getDescription();
+                String version1 = pdfFile.getVersion();
+                p.sendMessage(ChatColor.YELLOW + "[Build Battle] " + ChatColor.GREEN + "Version: "+ version1);
+                return true;
+            }
+            else if (args[0].equalsIgnoreCase("addtopic")) {
                 if (args.length < 2) {
                     sender.sendMessage(ChatColor.GREEN + "/bbadmin addtopic [topic]");
                     return true;

@@ -1,5 +1,6 @@
 package io.github.galaipa.sbb;
 
+import static io.github.galaipa.sbb.ArenaManager.debug;
 import me.hfox.spigboard.Spigboard;
 import me.hfox.spigboard.SpigboardEntry;
 import org.bukkit.*;
@@ -298,6 +299,7 @@ public class Arena {
         for (ArenaPlayer j : players) {
             Player p = j.getPlayer();
             p.teleport(winner1.getSpawnPoint());
+            debug("Teleporting player" + p.getName() + "to winner " + winner1.getPlayer().getName());
             if (p != winner1.getPlayer() && (winner2 == null || p != winner2.getPlayer()) && (winner3 == null || p != winner3.getPlayer())) {
                 ArenaManager.getManager().Rewards(p, "Rest");
             }
