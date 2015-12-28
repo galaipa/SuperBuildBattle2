@@ -12,6 +12,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.RegisteredServiceProvider;
@@ -61,6 +62,10 @@ public class SuperBuildBattle extends JavaPlugin {
     }
         @Override
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args){
+            if(sender instanceof ConsoleCommandSender){
+                sender.sendMessage("[Super Build Battle]" + "Commands can only be run by players");
+                return true;
+            }
             Player p = (Player) sender;
             if (cmd.getName().equalsIgnoreCase("buildbattle")){
                 if(!p.hasPermission("bb.user")){

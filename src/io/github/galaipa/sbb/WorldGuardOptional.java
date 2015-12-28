@@ -28,8 +28,8 @@ private static World world;
         getWorldGuard().getRegionManager(world).removeRegion("bb_" + Integer.toString(arena) + "_" + Integer.toString(id));
     }
 
-        private static WorldGuardPlugin getWorldGuard() {
-            Plugin plugin = Bukkit.getServer().getPluginManager().getPlugin("WorldGuard");
-            return (WorldGuardPlugin) plugin;
-        }
+    private static WorldGuardPlugin getWorldGuard() {
+        Plugin plugin = Bukkit.getServer().getPluginManager().getPlugin("WorldGuard");
+        return (WorldGuardPlugin) plugin;
+    }
 }

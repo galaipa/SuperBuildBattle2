@@ -167,6 +167,8 @@ public class ArenaManager {
             Double z2 = plugin.getConfig().getDouble("Arenas." + Integer.toString(id) +".Region." + Integer.toString(i) + ".Max.z");
             debug("Load points");
             debug(w1);
+            debug(plugin.getServer().getWorlds().toString());
+            debug(Bukkit.getWorlds().toString());
             Location l1 = new Location(plugin.getServer().getWorld(w1), x1, y1, z1);
             debug(l1.toString());
             Location l2 = new Location(plugin.getServer().getWorld(w1), x2, y2, z2);
