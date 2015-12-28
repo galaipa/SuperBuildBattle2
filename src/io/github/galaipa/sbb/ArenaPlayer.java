@@ -12,7 +12,7 @@ public class ArenaPlayer {
     public Player player;
     ItemStack[] armor;
     ItemStack[] inv;
-    private int id;
+    private int arenaID;
     private Player p;
     private int point;
     private Cuboid cuboid;
@@ -21,17 +21,23 @@ public class ArenaPlayer {
     private int type;
     private byte data;
     private int exp;
+    private final int id;
     public ArenaPlayer(Player p2, int arenaID, Location l) {
         p = p2;
         point = 0;
         Arena arena = ArenaManager.getManager().getArena(arenaID);
-        id = arena.getPlayers().size() + 1;
+        id = ArenaManager.getManager().getArena(arenaID).getPlayers().size() + 1;
+        this.arenaID = arenaID;
         inv = p.getInventory().getContents();
         armor = p.getInventory().getArmorContents();
         p.getInventory().setArmorContents(null);
         p.getInventory().clear();
         startLoc = l;
         exp = p.getLevel();
+    }
+
+    public int getArenaID() {
+        return arenaID;
     }
 
     public int getID() {

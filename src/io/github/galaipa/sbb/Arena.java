@@ -221,7 +221,6 @@ public class Arena {
                     winner();
                 } else {
                     currentVotedPlayer = getPlayer(current);
-
                     for (ArenaPlayer j : getPlayers()) {
                         Player p = j.getPlayer();
                         p.teleport(currentVotedPlayer.getSpawnPoint());
@@ -355,13 +354,8 @@ public class Arena {
         }.runTaskTimer(plugin, 0, 20);
     }
 
-    public ArenaPlayer getPlayer(int id) {
-        for (ArenaPlayer j : players) {
-            if (j.getID() == id) {
-                return j;
-            }
-        }
-        return null;
+    public ArenaPlayer getPlayer(int index) {
+        return players.get(index);
     }
 
 }

@@ -71,6 +71,11 @@ public class ArenaManager {
     }
 
     public void addPlayer(Player p, Location l) {
+        if(getArena(p) != null){
+            p.sendMessage(ChatColor.YELLOW + "[Build Battle] Sei già in gioco in un'arena BuildBattle!");
+            return;
+        }
+
         // p.sendMessage(Integer.toString(arenas.size()));
         for (Arena a : arenas) {
             // p.sendMessage(a.inGame.toString());
