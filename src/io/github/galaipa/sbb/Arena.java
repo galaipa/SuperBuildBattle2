@@ -113,15 +113,18 @@ public class Arena {
                     Broadcast(ChatColor.GREEN + "-----------------------------------------------");
                     sendTitleAll(20, 40, 20, ChatColor.GREEN + theme, getTr("14"));
                     for (ArenaPlayer j : getPlayers()) {
-                        Player p = j.getPlayer();
+                        final Player p = j.getPlayer();
                         p.teleport(j.getSpawnPoint());
-                        Bukkit.getScheduler().runTaskLater(plugin, ()->{
+                        Bukkit.getScheduler().runTaskLater(plugin, new Runnable() {
+                            @Override
+                            public void run() {
                             p.setGameMode(GameMode.CREATIVE);
                             p.getWorld().playSound(p.getLocation(), Sound.NOTE_PLING, 10, 1);
                             InGameGui.giveUserGui(p);
                             InGameGui.userGui();
                             if (plugin.getConfig().getBoolean("StartCommand.Enabled")) {
                                 plugin.getServer().dispatchCommand(plugin.getServer().getConsoleSender(), (plugin.getConfig().getString("StartCommand.Command")).replace("$player$", p.getName()));
+                            }
                             }
                         }, 5L);
                     }

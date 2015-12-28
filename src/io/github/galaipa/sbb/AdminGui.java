@@ -105,14 +105,14 @@ public class AdminGui implements Listener {
                 ItemStack i = p.getItemInHand();
                 Inventory inve = p.getInventory();
                 if (setup) {
-                    if (izena.equalsIgnoreCase(ChatColor.GREEN + "Set building time")) {
+                    if (izena.equalsIgnoreCase(ChatColor.GREEN + "Set building time (Minutes)")) {
                         event.setCancelled(true);
                         time = i.getAmount() + 1;
                         inve.remove(i);
                         i.setAmount(i.getAmount() + 1);
                         inve.addItem(i);
                         p.updateInventory();
-                    } else if (izena.equalsIgnoreCase(ChatColor.GREEN + "Set voting time")) {
+                    } else if (izena.equalsIgnoreCase(ChatColor.GREEN + "Set voting time (Seconds)")) {
                         event.setCancelled(true);
                         timeVote = i.getAmount() + 5;
                         inve.remove(i);

@@ -97,20 +97,23 @@ public class ArenaManager {
         p.sendMessage(ChatColor.YELLOW + "[Build Battle] " + ChatColor.RED + "All arenas are full or inGame");
     }
 
-    public void removePlayer(Player p, Boolean bo) {
+    public void removePlayer(final Player p, Boolean bo) {
         if (getArena(p) != null) {
             Arena arena = getArena(p);
-            ArenaPlayer j2 = arena.getArenaPlayer(p);
+            final ArenaPlayer j2 = arena.getArenaPlayer(p);
             if (arena.inGame) {
                 j2.resetArenas();
             }
-            Bukkit.getScheduler().runTaskLater(plugin, ()->{
-                p.setGameMode(GameMode.SURVIVAL);
-                p.teleport(j2.getPreSpawn());
-                p.sendMessage(ChatColor.GREEN + "[Build Battle] " + ChatColor.RED + getTr("3"));
-                ScoreboardManager manager = Bukkit.getScoreboardManager();
-                p.setScoreboard(manager.getNewScoreboard());
-                j2.returnInv();
+            Bukkit.getScheduler().runTaskLater(plugin, new Runnable() {
+                @Override
+                public void run() {
+                    p.setGameMode(GameMode.SURVIVAL);
+                    p.teleport(j2.getPreSpawn());
+                    p.sendMessage(ChatColor.GREEN + "[Build Battle] " + ChatColor.RED + getTr("3"));
+                    ScoreboardManager manager = Bukkit.getScoreboardManager();
+                    p.setScoreboard(manager.getNewScoreboard());
+                    j2.returnInv();
+                }
             }, 5L);
 
             arena.Broadcast(ChatColor.GREEN + "[Build Battle] " + ChatColor.RED + p.getName() + " " + getTr("4"));
