@@ -73,7 +73,6 @@ public class SuperBuildBattle extends JavaPlugin {
         ArenaManager.WorldGuarda = getServer().getPluginManager().getPlugin("WorldGuard") != null;
         ArenaManager.getManager().loadArenas();
     }
-
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
         if(sender instanceof ConsoleCommandSender){
