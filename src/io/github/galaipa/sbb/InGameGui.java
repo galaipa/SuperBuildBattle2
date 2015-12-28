@@ -26,10 +26,10 @@ public class InGameGui implements Listener {
 
     public static void userGui() {
         myInventory = Bukkit.createInventory(null, 9, "InGame Menu");
-        myInventory.setItem(1, item(Material.BARRIER, 0, 1, ChatColor.RED + "Clear arena", "Drag the block you want to put as floor"));
-        myInventory.setItem(3, item(Material.WOOD_PLATE, 0, 1, ChatColor.GREEN + "Set ground"));
+        myInventory.setItem(1, item(Material.BARRIER, 0, 1, ChatColor.RED + "Clear arena", "Reset your plot"));
+        myInventory.setItem(3, item(Material.WOOD_PLATE, 0, 1, ChatColor.GREEN + "Set ground", "Drag the block you want to put as floor"));
         //     myInventory.setItem(7,item(Material.BANNER,0,1,ChatColor.GREEN + "Banner"));
-        myInventory.setItem(5, item(Material.SKULL_ITEM, 3, 1, ChatColor.GREEN + "Skulls"));
+        myInventory.setItem(5, item(Material.SKULL_ITEM, 3, 1, ChatColor.GREEN + "Skulls", "Decorate your plot with cool skulls"));
         skullGui();
     }
 
