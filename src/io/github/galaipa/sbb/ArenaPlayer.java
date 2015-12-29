@@ -37,6 +37,8 @@ public class ArenaPlayer {
         p.getInventory().clear();
         startLoc = l;
         exp = p.getLevel();
+        player = p2;
+        time = 6000;
     }
 
     public int getArenaID() {
@@ -101,18 +103,9 @@ public class ArenaPlayer {
         return startLoc;
     }
 
-    public void addPlayer(Player p) {
-        player = p;
-    }
-
-    public void removePlayer(Player p) {
-        player = null;
-    }
-
     public String getPlayerString() {
         return p.getName();
     }
-
     public void returnInv() {
         p.getInventory().setContents(inv);
         p.getInventory().setArmorContents(armor);
@@ -126,7 +119,7 @@ public class ArenaPlayer {
         return time;
     }
     public void setTime(int t){
-        player.setPlayerTime(t, false);
+        player.setPlayerTime((long) t, false);
         time = t;
     }
     public WeatherType getWeather(){

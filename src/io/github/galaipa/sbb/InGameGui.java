@@ -29,11 +29,11 @@ public class InGameGui implements Listener {
 
     public static void userGui() {
         myInventory = Bukkit.createInventory(null, 9, "InGame Menu");
-        myInventory.setItem(1, item(Material.BARRIER, 0, 1, ChatColor.RED + "Clear arena", "Reset your plot"));
+        myInventory.setItem(2, item(Material.BARRIER, 0, 1, ChatColor.RED + "Clear arena", "Reset your plot"));
         myInventory.setItem(3, item(Material.WOOD_PLATE, 0, 1, ChatColor.GREEN + "Set ground", "Drag the block you want to put as floor"));
-        myInventory.setItem(7,item(Material.SULPHUR,0,1,ChatColor.GREEN + "Wheater"));
-        myInventory.setItem(8,item(Material.WATCH,0,1,ChatColor.GREEN + "Time"));
-        myInventory.setItem(5, item(Material.SKULL_ITEM, 3, 1, ChatColor.GREEN + "Skulls", "Decorate your plot with cool skulls"));
+        myInventory.setItem(4,item(Material.SULPHUR,0,1,ChatColor.GREEN + "Weather", "Set the Weather in your plot"));
+        myInventory.setItem(5,item(Material.WATCH,0,1,ChatColor.GREEN + "Time", "Set the Time in your plot"));
+        myInventory.setItem(6, item(Material.SKULL_ITEM, 3, 1, ChatColor.GREEN + "Skulls", "Decorate your plot with cool skulls"));
         skullGui();
         weatherGui();
         timeGui();
@@ -45,16 +45,17 @@ public class InGameGui implements Listener {
 
     }
     public static void weatherGui() {
-        weatherInventory  = Bukkit.createInventory(null, 9, "Wheater");
+        weatherInventory  = Bukkit.createInventory(null, 9, "Weather");
         weatherInventory.setItem(2, item(Material.WATER_BUCKET,0,1,ChatColor.BLUE + "Rain"));
         weatherInventory.setItem(6, item(Material.LAVA_BUCKET,0,1,ChatColor.RED + "Sun"));
     }
     public static void timeGui() {
         timeInventory  = Bukkit.createInventory(null, 9, "Time");
-        timeInventory.setItem(1, item(Material.CLAY,4,1,ChatColor.BLUE + "6:00"));
-        timeInventory.setItem(2, item(Material.CLAY,6,1,ChatColor.BLUE + "12:00"));
-        timeInventory.setItem(3, item(Material.CLAY,1,1,ChatColor.BLUE + "18:00"));
-        timeInventory.setItem(4, item(Material.CLAY,9,1,ChatColor.BLUE + "24:00"));
+        timeInventory.setItem(2, item(Material.STAINED_CLAY,9,1,ChatColor.BLUE + "3:00"));
+        timeInventory.setItem(3, item(Material.STAINED_CLAY,4,1,ChatColor.BLUE + "6:00"));
+        timeInventory.setItem(4, item(Material.STAINED_CLAY,6,1,ChatColor.BLUE + "12:00"));
+        timeInventory.setItem(5, item(Material.STAINED_CLAY,1,1,ChatColor.BLUE + "18:00"));
+        timeInventory.setItem(6, item(Material.STAINED_CLAY,9,1,ChatColor.BLUE + "24:00"));
         
     }
     public static void skullGui() {
@@ -137,7 +138,7 @@ public class InGameGui implements Listener {
                             }
                         }
 
-                    }else if (izena.equalsIgnoreCase(ChatColor.GREEN + "Wheater")) {
+                    }else if (izena.equalsIgnoreCase(ChatColor.GREEN + "Weather")) {
                         event.setCancelled(true);
                         player.openInventory(weatherInventory);
                     }else if (izena.equalsIgnoreCase(ChatColor.GREEN + "Time")) {
@@ -196,6 +197,9 @@ public class InGameGui implements Listener {
                         player.closeInventory();  
                     }else if (izena.equalsIgnoreCase(ChatColor.BLUE + "24:00")) {
                         t.setTime(18000);
+                        player.closeInventory();  
+                    }else if (izena.equalsIgnoreCase(ChatColor.BLUE + "3:00")) {
+                        t.setTime(21000);
                         player.closeInventory();  
                     }
                 }if (inventory.getName().equals(skullsInventory.getName()) && event.getCurrentItem() != null) {

@@ -104,20 +104,14 @@ public class ArenaManager {
             if (arena.inGame) {
                 j2.resetArenas();
             }
-            Bukkit.getScheduler().runTaskLater(plugin, new Runnable() {
-                @Override
-                public void run() {
-                    p.setGameMode(GameMode.SURVIVAL);
-                    p.teleport(j2.getPreSpawn());
-                    p.sendMessage(ChatColor.GREEN + "[Build Battle] " + ChatColor.RED + getTr("3"));
-                    ScoreboardManager manager = Bukkit.getScoreboardManager();
-                    p.setScoreboard(manager.getNewScoreboard());
-                    j2.returnInv();
-                    p.resetPlayerWeather();
-                    p.resetPlayerTime();
-                }
-            }, 5L);
-
+            p.setGameMode(GameMode.SURVIVAL);
+            p.teleport(j2.getPreSpawn());
+            p.sendMessage(ChatColor.GREEN + "[Build Battle] " + ChatColor.RED + getTr("3"));
+            ScoreboardManager manager = Bukkit.getScoreboardManager();
+            p.setScoreboard(manager.getNewScoreboard());
+            p.resetPlayerWeather();
+            p.resetPlayerTime();
+            j2.returnInv();
             arena.Broadcast(ChatColor.GREEN + "[Build Battle] " + ChatColor.RED + p.getName() + " " + getTr("4"));
             if (bo) {
                 arena.getPlayers().remove(j2);
