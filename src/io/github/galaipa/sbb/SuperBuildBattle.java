@@ -2,6 +2,7 @@ package io.github.galaipa.sbb;
 
 import static io.github.galaipa.sbb.ArenaManager.debug;
 import net.milkbowl.vault.economy.Economy;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -58,6 +59,12 @@ public class SuperBuildBattle extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new AdminGui(), this);
         getServer().getPluginManager().registerEvents(new InGameGui(), this);
         loadTranslations();
+        if (Bukkit.getPluginManager().getPlugin("PlayerPoints") != null && getConfig().getBoolean("Rewards.PlayerPoints.Enabled")) {
+            PlayerPointsOptional.hookPlayerPoints(Bukkit.getPluginManager().getPlugin("PlayerPoints"));
+            ArenaManager.PlayerPoints = true;
+        } else {
+            ArenaManager.PlayerPoints = false;
+        }
         if ((getConfig().getBoolean("Rewards.Vault.Enabled"))) {
             if (!setupEconomy()) {
                 ArenaManager.Vault = false;
@@ -81,9 +88,10 @@ public class SuperBuildBattle extends JavaPlugin {
         ArenaManager.WorldGuarda = getServer().getPluginManager().getPlugin("WorldGuard") != null;
         ArenaManager.getManager().loadArenas();
     }
+
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
-        if(sender instanceof ConsoleCommandSender){
+        if (sender instanceof ConsoleCommandSender) {
             sender.sendMessage("[Super Build Battle]" + "Commands can only be run by players");
             return true;
         }
@@ -107,8 +115,7 @@ public class SuperBuildBattle extends JavaPlugin {
                 sender.sendMessage(ChatColor.YELLOW + "/bbadmin version");
                 sender.sendMessage(ChatColor.YELLOW + "/bbadmin (To enter setup)");
                 sender.sendMessage(ChatColor.YELLOW + "/bbadmin addtopic-removetopic-topiclist");
-            }
-            else {
+            } else {
                 sender.sendMessage(ChatColor.GREEN + "[Build Battle] " + ChatColor.RED + "Unknown command");
             }
 
@@ -137,10 +144,9 @@ public class SuperBuildBattle extends JavaPlugin {
             }else if (args[0].equalsIgnoreCase("version")) {
                 PluginDescriptionFile pdfFile = this.getDescription();
                 String version1 = pdfFile.getVersion();
-                p.sendMessage(ChatColor.YELLOW + "[Build Battle] " + ChatColor.GREEN + "Version: "+ version1);
+                p.sendMessage(ChatColor.YELLOW + "[Build Battle] " + ChatColor.GREEN + "Version: " + version1);
                 return true;
-            }
-            else if (args[0].equalsIgnoreCase("addtopic")) {
+            } else if (args[0].equalsIgnoreCase("addtopic")) {
                 if (args.length < 2) {
                     sender.sendMessage(ChatColor.GREEN + "/bbadmin addtopic [topic]");
                     return true;
