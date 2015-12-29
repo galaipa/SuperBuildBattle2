@@ -17,20 +17,23 @@ import java.util.Map;
 
 import static io.github.galaipa.sbb.AdminGui.item;
 import static io.github.galaipa.sbb.ArenaManager.getManager;
+import org.bukkit.WeatherType;
 
 
 public class InGameGui implements Listener {
     public static Inventory myInventory;
     public static Inventory skullsInventory;
+    public static Inventory weatherInventory;
     public static Map<String, String> skulls = new HashMap<>();
 
     public static void userGui() {
         myInventory = Bukkit.createInventory(null, 9, "InGame Menu");
         myInventory.setItem(1, item(Material.BARRIER, 0, 1, ChatColor.RED + "Clear arena", "Reset your plot"));
         myInventory.setItem(3, item(Material.WOOD_PLATE, 0, 1, ChatColor.GREEN + "Set ground", "Drag the block you want to put as floor"));
-        //     myInventory.setItem(7,item(Material.BANNER,0,1,ChatColor.GREEN + "Banner"));
+        myInventory.setItem(7,item(Material.SULPHUR,0,1,ChatColor.GREEN + "Wheater"));
         myInventory.setItem(5, item(Material.SKULL_ITEM, 3, 1, ChatColor.GREEN + "Skulls", "Decorate your plot with cool skulls"));
         skullGui();
+        weatherGui();
     }
 
     public static void giveUserGui(Player p) {
@@ -38,7 +41,11 @@ public class InGameGui implements Listener {
         p.updateInventory();
 
     }
-
+    public static void weatherGui() {
+        weatherInventory  = Bukkit.createInventory(null, 9, "Wheater");
+        weatherInventory.setItem(2, item(Material.WATER_BUCKET,0,1,ChatColor.BLUE + "Rain"));
+        weatherInventory.setItem(6, item(Material.LAVA_BUCKET,0,1,ChatColor.RED + "Sun"));
+    }
     public static void skullGui() {
         skullsInventory = Bukkit.createInventory(null, 54, "Skulls");
         String s = "Blaze,CaveSpider,Chicken,Cow,Enderman,Ghast,Golem,LavaSlime,MushroomCow,Ocelot,Pig,PigZombie,Sheep,Slime,Spider,Squid,Villager,Cactus,Cake,Chest,Melon,OakLog,Pumpkin,TNT,ArrowUp,ArrowLeft,ArrowRight,Question,Exclamation,";
@@ -119,7 +126,12 @@ public class InGameGui implements Listener {
                             }
                         }
 
-                    }/*else if (izena.equalsIgnoreCase(ChatColor.GREEN + "Banner")) {
+                    } else if (izena.equalsIgnoreCase(ChatColor.GREEN + "Wheater")) {
+                        event.setCancelled(true);
+                        player.openInventory(weatherInventory);
+                    }
+                        
+                    /*else if (izena.equalsIgnoreCase(ChatColor.GREEN + "Banner")) {
                     event.setCancelled(true);
                     if(ArenaManager.BannerMakerEnabled){
                         BannerMakerOptional.getBannerMaker().getAPI().openBannerMakerGUI(player);
@@ -129,6 +141,24 @@ public class InGameGui implements Listener {
                 }*/ else if (izena.equalsIgnoreCase(ChatColor.GREEN + "Skulls")) {
                         event.setCancelled(true);
                         player.openInventory(skullsInventory);
+                    }
+                }if (inventory.getName().equalsIgnoreCase(weatherInventory.getName()) && event.getCurrentItem() != null) {
+                    event.setCancelled(true);
+                    ItemStack clicked = event.getCurrentItem();
+                    Player player = (Player) event.getWhoClicked();
+                    ArenaPlayer t = a.getArenaPlayer(player);
+                    String izena;
+                    if (clicked.hasItemMeta() && clicked.getItemMeta().hasDisplayName()) {
+                        izena = clicked.getItemMeta().getDisplayName();
+                    } else {
+                        return;
+                    }
+                    if (izena.equalsIgnoreCase(ChatColor.BLUE + "Rain")) {
+                        player.setPlayerWeather(WeatherType.DOWNFALL); 
+                        player.closeInventory();
+                    }else if (izena.equalsIgnoreCase(ChatColor.RED + "Sun")) {
+                        player.setPlayerWeather(WeatherType.CLEAR); 
+                        player.closeInventory();
                     }
                 }
                 if (inventory.getName().equals(skullsInventory.getName()) && event.getCurrentItem() != null) {
