@@ -1,5 +1,6 @@
 package io.github.galaipa.sbb;
 
+import static io.github.galaipa.sbb.ArenaManager.debug;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
@@ -9,6 +10,7 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.plugin.PluginDescriptionFile;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -16,7 +18,6 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
-import org.bukkit.plugin.PluginDescriptionFile;
 
 
 public class SuperBuildBattle extends JavaPlugin {
@@ -59,16 +60,22 @@ public class SuperBuildBattle extends JavaPlugin {
         loadTranslations();
         if ((getConfig().getBoolean("Rewards.Vault.Enabled"))) {
             if (!setupEconomy()) {
-
-                getServer().getPluginManager().disablePlugin(this);
                 ArenaManager.Vault = false;
+                System.out.print("[SBB] Economy rewards disabled, due there is not Vault installed or a economy plugin is missing");
                 return;
             } else {
                 ArenaManager.Vault = true;
+                debug("Vault: true");
             }
         } else {
             ArenaManager.Vault = false;
+            debug("Vault: false");
         }
+        if (getServer().getPluginManager().getPlugin("PlayerPoints") != null && getConfig().getBoolean("Rewards.PlayerPoints.Enabled")) {
+            PlayerPointsOptional.hookPlayerPoints(getServer().getPluginManager().getPlugin("PlayerPoints"));
+            ArenaManager.PlayerPoints = true;
+            debug("PlayerPoints: true");
+        }else { ArenaManager.PlayerPoints = false; debug("PlayerPoints: false");}
         ArenaManager.Command = getConfig().getBoolean("Rewards.Command.Enabled");
         ArenaManager.debug = getConfig().getBoolean("Debug");
         ArenaManager.WorldGuarda = getServer().getPluginManager().getPlugin("WorldGuard") != null;
