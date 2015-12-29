@@ -1,6 +1,5 @@
 package io.github.galaipa.sbb;
 
-import static io.github.galaipa.sbb.ArenaManager.debug;
 import me.hfox.spigboard.Spigboard;
 import me.hfox.spigboard.SpigboardEntry;
 import org.bukkit.*;
@@ -12,6 +11,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.*;
 
+import static io.github.galaipa.sbb.ArenaManager.debug;
 import static io.github.galaipa.sbb.SuperBuildBattle.getTr;
 
 
@@ -28,6 +28,7 @@ public class Arena {
     String timer = null;
     ArenaPlayer currentVotedPlayer;
     SuperBuildBattle plugin = SuperBuildBattle.getInstance();
+    private volatile boolean running = false;
 
     public Arena(int id, int minPlayers, int maxPlayers, int time, int votingTime, Location lobby, Cuboid[] cuboid) {
         this.id = id;
@@ -56,7 +57,7 @@ public class Arena {
         return null;
     }
 
-    public boolean contains(Player p){
+    public boolean contains(Player p) {
         for (ArenaPlayer j : players) {
             if (j.getPlayer().equals(p)) {
                 return true;
@@ -83,9 +84,8 @@ public class Arena {
         }
     }
 
-    private volatile boolean running = false;
     public synchronized void start() {
-        if(running) return;
+        if (running) return;
         running = true;
         assignArenas();
         //  Broadcast("AssignArenas OK");
@@ -119,13 +119,13 @@ public class Arena {
                         Bukkit.getScheduler().runTaskLater(plugin, new Runnable() {
                             @Override
                             public void run() {
-                            p.setGameMode(GameMode.CREATIVE);
-                            p.getWorld().playSound(p.getLocation(), Sound.NOTE_PLING, 10, 1);
-                            InGameGui.giveUserGui(p);
-                            InGameGui.userGui();
-                            if (plugin.getConfig().getBoolean("StartCommand.Enabled")) {
-                                plugin.getServer().dispatchCommand(plugin.getServer().getConsoleSender(), (plugin.getConfig().getString("StartCommand.Command")).replace("$player$", p.getName()));
-                            }
+                                p.setGameMode(GameMode.CREATIVE);
+                                p.getWorld().playSound(p.getLocation(), Sound.NOTE_PLING, 10, 1);
+                                InGameGui.giveUserGui(p);
+                                InGameGui.userGui();
+                                if (plugin.getConfig().getBoolean("StartCommand.Enabled")) {
+                                    plugin.getServer().dispatchCommand(plugin.getServer().getConsoleSender(), (plugin.getConfig().getString("StartCommand.Command")).replace("$player$", p.getName()));
+                                }
                             }
                         }, 5L);
                     }
@@ -210,7 +210,7 @@ public class Arena {
 
             @Override
             public void run() {
-                if(currentVotedPlayer != null){
+                if (currentVotedPlayer != null) {
                     for (ArenaPlayer j2 : players) {
                         if (botoa.containsKey(j2.getPlayer())) {
                             currentVotedPlayer.addPoint(botoa.get(j2.getPlayer()));
@@ -307,6 +307,7 @@ public class Arena {
         final ArenaPlayer finalWinner = winner1;
         new BukkitRunnable() {
             int zenbat = 0;
+
             @Override
             public void run() {
                 Firework f = finalWinner.getWorld().spawn(t.getCuboid().getCenter(), Firework.class);

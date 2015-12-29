@@ -22,7 +22,7 @@ public class ArenaManager {
     public static Boolean admin = false;
     public static ArenaManager am = new ArenaManager();
     public static boolean debug;
-    public static Boolean Vault, Command, WorldGuarda;
+    public static boolean PlayerPoints, Vault, Command, WorldGuarda;
     Location lobby;
     List<Arena> arenas = new ArrayList<>();
     SuperBuildBattle plugin = SuperBuildBattle.getInstance();
@@ -55,6 +55,12 @@ public class ArenaManager {
         }
     }
 
+    public static void debug(String msg) {
+        if (debug) {
+            System.out.println(msg);
+        }
+    }
+
     public Arena getArena(int i) {
         for (Arena a : arenas) {
             if (a.getID() == i) {
@@ -64,14 +70,8 @@ public class ArenaManager {
         return null;
     }
 
-    public static void debug(String msg) {
-        if (debug) {
-            System.out.println(msg);
-        }
-    }
-    
     public void addPlayer(Player p, Location l) {
-        if(getArena(p) != null){
+        if (getArena(p) != null) {
             //TODO translate in your language
             p.sendMessage(ChatColor.YELLOW + "[Build Battle] You are already playing!");
             return;
@@ -273,6 +273,9 @@ public class ArenaManager {
         if (Vault) {
             giveVaultRewards(p.getPlayer(), plugin.getConfig().getInt("Rewards.Vault." + s));
         }
+        if (PlayerPoints) {
+            PlayerPointsOptional.givePlayerPointsRewards(p.getPlayer(), plugin.getConfig().getInt("Rewards.PlayerPoints." + s));
+        }
         if (Command) {
             plugin.getServer().dispatchCommand(plugin.getServer().getConsoleSender(), (plugin.getConfig().getString("Rewards.Command." + s)).replace("$player$", p.getName()));
         }
@@ -281,6 +284,9 @@ public class ArenaManager {
     public void Rewards(Player p, String s) {
         if (Vault) {
             giveVaultRewards(p.getPlayer(), plugin.getConfig().getInt("Rewards.Vault." + s));
+        }
+        if (PlayerPoints) {
+            PlayerPointsOptional.givePlayerPointsRewards(p.getPlayer(), plugin.getConfig().getInt("Rewards.PlayerPoints." + s));
         }
         if (Command) {
             plugin.getServer().dispatchCommand(plugin.getServer().getConsoleSender(), (plugin.getConfig().getString("Rewards.Command." + s)).replace("$player$", p.getName()));
