@@ -121,11 +121,19 @@ public class SuperBuildBattle extends JavaPlugin {
                 AdminGui.arenaGui(p);
                 p.sendMessage(ChatColor.YELLOW + "[Build Battle] " + ChatColor.GREEN + "Use the items in your hand to setup SuperBuildBattle");
             } else if (args[0].equalsIgnoreCase("start")) {
-                p.sendMessage(ChatColor.YELLOW + "[Build Battle] " + ChatColor.GREEN + "You forced the game to start");
-                ArenaManager.getManager().getArena(Integer.parseInt(args[1])).start();
+                if(args.length <2){
+                    p.sendMessage(ChatColor.YELLOW + "[Build Battle] " + ChatColor.RED + "You must specify the arena number");
+                }else{
+                    p.sendMessage(ChatColor.YELLOW + "[Build Battle] " + ChatColor.GREEN + "You forced the game to start");
+                    ArenaManager.getManager().getArena(Integer.parseInt(args[1])).start();
+                }
             } else if (args[0].equalsIgnoreCase("stop")) {
-                p.sendMessage(ChatColor.YELLOW + "[Build Battle] " + ChatColor.GREEN + "You forced the game to stop");
-                //reset();
+                if(args.length <2){
+                    p.sendMessage(ChatColor.YELLOW + "[Build Battle] " + ChatColor.RED + "You must specify the arena number");
+                }else{
+                    p.sendMessage(ChatColor.YELLOW + "[Build Battle] " + ChatColor.GREEN + "You forced the game to stop");
+                    //reset();
+                }
             }else if (args[0].equalsIgnoreCase("version")) {
                 PluginDescriptionFile pdfFile = this.getDescription();
                 String version1 = pdfFile.getVersion();

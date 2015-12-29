@@ -138,8 +138,11 @@ public class Arena {
     }
 
     public void Building() {
-        SpigBoard = new Spigboard(ChatColor.DARK_GREEN.BOLD + "BuildBattle");
-        SpigBoard.add("theme", ChatColor.GREEN + getTr("17") + ": " + ChatColor.YELLOW + theme, 4);
+        SpigBoard = new Spigboard(ChatColor.DARK_RED + "Super Build Battle");
+        /*String themee = ChatColor.GREEN + getTr("17") + ": " + ChatColor.YELLOW + theme;
+        SpigBoard.add("theme", themee, 3);*/
+        SpigBoard.add("theme1", ChatColor.GREEN + getTr("17") + ":", 5);
+        SpigBoard.add("theme", ChatColor.YELLOW + theme, 4);
         for (ArenaPlayer j : getPlayers()) {
             SpigBoard.add(j.getPlayer());
         }
@@ -170,7 +173,7 @@ public class Arena {
                     if (score != null) {
                         score.update(timer2);
                     } else {
-                        SpigBoard.add("timer", timer2, 2);
+                        SpigBoard.add("timer", timer2, 1);
                     }
                 } else {
                     String timer2 = ChatColor.GREEN + getTr("18") + ": " + ChatColor.YELLOW + minutes + ":" + seconds;
@@ -178,7 +181,7 @@ public class Arena {
                     if (score != null) {
                         score.update(timer2);
                     } else {
-                        SpigBoard.add("timer", timer2, 2);
+                        SpigBoard.add("timer", timer2, 1);
                     }
                 }
             }
@@ -187,6 +190,7 @@ public class Arena {
 
     public void voting() {
         SpigBoard.remove(SpigBoard.getEntry("timer"));
+        SpigBoard.add("player",ChatColor.GREEN + getTr("19") + ": ",3);
         for (ArenaPlayer j : getPlayers()) {
             Player p = j.getPlayer();
             Inventory inv = p.getInventory();
@@ -207,7 +211,7 @@ public class Arena {
             String timer = "";
             String reset = "";
             String taldekideak = "";
-
+            
             @Override
             public void run() {
                 if(currentVotedPlayer != null){
@@ -231,7 +235,7 @@ public class Arena {
                         sendTitleAll(20, 40, 20, currentVotedPlayer.getPlayerString(), "");
                         p.getWorld().playSound(p.getLocation(), Sound.NOTE_PLING, 10, 1);
                     }
-                    String scoreboardstring = ChatColor.GREEN + getTr("19") + ": " + ChatColor.YELLOW + currentVotedPlayer.getPlayerString();
+                    String scoreboardstring = ChatColor.YELLOW + currentVotedPlayer.getPlayerString();
                     SpigboardEntry score = SpigBoard.getEntry("taldeakideak2");
                     if (score != null) {
                         score.update(scoreboardstring);
