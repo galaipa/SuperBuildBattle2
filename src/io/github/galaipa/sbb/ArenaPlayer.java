@@ -2,6 +2,7 @@ package io.github.galaipa.sbb;
 
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.WeatherType;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
@@ -22,6 +23,8 @@ public class ArenaPlayer {
     private int type;
     private byte data;
     private int exp;
+    private long time;
+    private WeatherType weather;
 
     public ArenaPlayer(Player p2, int arenaID, Location l) {
         p = p2;
@@ -118,6 +121,23 @@ public class ArenaPlayer {
 
     public Boolean checkPlayer(Player p) {
         return player.equals(p);
+    }
+    public long getTime(){
+        return time;
+    }
+    public void setTime(int t){
+        player.setPlayerTime(t, false);
+        time = t;
+    }
+    public WeatherType getWeather(){
+        if(weather == null){
+            return WeatherType.CLEAR;
+        }
+        return weather;
+    }
+    public void setWeather(WeatherType t){
+        player.setPlayerWeather(t);
+        weather = t;
     }
 }
 

@@ -113,6 +113,8 @@ public class ArenaManager {
                     ScoreboardManager manager = Bukkit.getScoreboardManager();
                     p.setScoreboard(manager.getNewScoreboard());
                     j2.returnInv();
+                    p.resetPlayerWeather();
+                    p.resetPlayerTime();
                 }
             }, 5L);
 

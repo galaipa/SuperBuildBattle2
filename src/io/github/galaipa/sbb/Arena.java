@@ -232,6 +232,8 @@ public class Arena {
                     for (ArenaPlayer j : getPlayers()) {
                         Player p = j.getPlayer();
                         p.teleport(currentVotedPlayer.getSpawnPoint());
+                        p.setPlayerTime(currentVotedPlayer.getTime(), false); // Set plot time
+                        p.setPlayerWeather(currentVotedPlayer.getWeather()); // Set plot wheater
                         sendTitleAll(20, 40, 20, currentVotedPlayer.getPlayerString(), "");
                         p.getWorld().playSound(p.getLocation(), Sound.NOTE_PLING, 10, 1);
                     }

@@ -24,6 +24,7 @@ public class InGameGui implements Listener {
     public static Inventory myInventory;
     public static Inventory skullsInventory;
     public static Inventory weatherInventory;
+    public static Inventory timeInventory;
     public static Map<String, String> skulls = new HashMap<>();
 
     public static void userGui() {
@@ -31,9 +32,11 @@ public class InGameGui implements Listener {
         myInventory.setItem(1, item(Material.BARRIER, 0, 1, ChatColor.RED + "Clear arena", "Reset your plot"));
         myInventory.setItem(3, item(Material.WOOD_PLATE, 0, 1, ChatColor.GREEN + "Set ground", "Drag the block you want to put as floor"));
         myInventory.setItem(7,item(Material.SULPHUR,0,1,ChatColor.GREEN + "Wheater"));
+        myInventory.setItem(8,item(Material.WATCH,0,1,ChatColor.GREEN + "Time"));
         myInventory.setItem(5, item(Material.SKULL_ITEM, 3, 1, ChatColor.GREEN + "Skulls", "Decorate your plot with cool skulls"));
         skullGui();
         weatherGui();
+        timeGui();
     }
 
     public static void giveUserGui(Player p) {
@@ -45,6 +48,14 @@ public class InGameGui implements Listener {
         weatherInventory  = Bukkit.createInventory(null, 9, "Wheater");
         weatherInventory.setItem(2, item(Material.WATER_BUCKET,0,1,ChatColor.BLUE + "Rain"));
         weatherInventory.setItem(6, item(Material.LAVA_BUCKET,0,1,ChatColor.RED + "Sun"));
+    }
+    public static void timeGui() {
+        timeInventory  = Bukkit.createInventory(null, 9, "Time");
+        timeInventory.setItem(1, item(Material.CLAY,4,1,ChatColor.BLUE + "6:00"));
+        timeInventory.setItem(2, item(Material.CLAY,6,1,ChatColor.BLUE + "12:00"));
+        timeInventory.setItem(3, item(Material.CLAY,1,1,ChatColor.BLUE + "18:00"));
+        timeInventory.setItem(4, item(Material.CLAY,9,1,ChatColor.BLUE + "24:00"));
+        
     }
     public static void skullGui() {
         skullsInventory = Bukkit.createInventory(null, 54, "Skulls");
@@ -126,9 +137,12 @@ public class InGameGui implements Listener {
                             }
                         }
 
-                    } else if (izena.equalsIgnoreCase(ChatColor.GREEN + "Wheater")) {
+                    }else if (izena.equalsIgnoreCase(ChatColor.GREEN + "Wheater")) {
                         event.setCancelled(true);
                         player.openInventory(weatherInventory);
+                    }else if (izena.equalsIgnoreCase(ChatColor.GREEN + "Time")) {
+                        event.setCancelled(true);
+                        player.openInventory(timeInventory);
                     }
                         
                     /*else if (izena.equalsIgnoreCase(ChatColor.GREEN + "Banner")) {
@@ -160,8 +174,31 @@ public class InGameGui implements Listener {
                         player.setPlayerWeather(WeatherType.CLEAR); 
                         player.closeInventory();
                     }
-                }
-                if (inventory.getName().equals(skullsInventory.getName()) && event.getCurrentItem() != null) {
+                }if (inventory.getName().equalsIgnoreCase(timeInventory.getName()) && event.getCurrentItem() != null) {
+                    event.setCancelled(true);
+                    ItemStack clicked = event.getCurrentItem();
+                    Player player = (Player) event.getWhoClicked();
+                    ArenaPlayer t = a.getArenaPlayer(player);
+                    String izena;
+                    if (clicked.hasItemMeta() && clicked.getItemMeta().hasDisplayName()) {
+                        izena = clicked.getItemMeta().getDisplayName();
+                    } else {
+                        return;
+                    }
+                    if (izena.equalsIgnoreCase(ChatColor.BLUE + "6:00")) {
+                        t.setTime(0);
+                        player.closeInventory();
+                    }else if (izena.equalsIgnoreCase(ChatColor.BLUE + "12:00")) {
+                        t.setTime(6000);
+                        player.closeInventory();  
+                    }else if (izena.equalsIgnoreCase(ChatColor.BLUE + "18:00")) {
+                        t.setTime(1200);
+                        player.closeInventory();  
+                    }else if (izena.equalsIgnoreCase(ChatColor.BLUE + "24:00")) {
+                        t.setTime(18000);
+                        player.closeInventory();  
+                    }
+                }if (inventory.getName().equals(skullsInventory.getName()) && event.getCurrentItem() != null) {
                     event.setCancelled(true);
                     Player player = (Player) event.getWhoClicked();
                     ItemStack i = event.getCurrentItem();
