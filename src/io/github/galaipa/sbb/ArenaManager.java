@@ -106,18 +106,19 @@ public class ArenaManager {
             }
             p.setGameMode(GameMode.SURVIVAL);
             p.teleport(j2.getPreSpawn());
-            p.sendMessage(ChatColor.GREEN + "[Build Battle] " + ChatColor.RED + getTr("3"));
             ScoreboardManager manager = Bukkit.getScoreboardManager();
             p.setScoreboard(manager.getNewScoreboard());
             p.resetPlayerWeather();
             p.resetPlayerTime();
             j2.returnInv();
-            arena.Broadcast(ChatColor.GREEN + "[Build Battle] " + ChatColor.RED + p.getName() + " " + getTr("4"));
             if (bo) {
                 arena.getPlayers().remove(j2);
                 if (arena.getPlayers().isEmpty()) {
                     arena.reset();
                 }
+            }else{
+                p.sendMessage(ChatColor.GREEN + "[Build Battle] " + ChatColor.RED + getTr("3"));
+                arena.Broadcast(ChatColor.GREEN + "[Build Battle] " + ChatColor.RED + p.getName() + " " + getTr("4"));
             }
         } else {
             p.sendMessage(ChatColor.GREEN + "[Build Battle] " + ChatColor.RED + getTr("5"));
