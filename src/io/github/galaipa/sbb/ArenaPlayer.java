@@ -1,10 +1,12 @@
 package io.github.galaipa.sbb;
 
+import org.bukkit.Chunk;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.WeatherType;
 import org.bukkit.World;
 import org.bukkit.block.Block;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
@@ -64,6 +66,15 @@ public class ArenaPlayer {
     public void resetArenas() {
         for (Block block : cuboid) {
             block.setType(Material.AIR);
+        }
+        for (Chunk chunk : cuboid.getChunks()){
+            for (Entity e : chunk.getEntities()){
+                if(e instanceof Player){
+                    return;
+                }else if(cuboid.contains(e.getLocation())){
+                    e.remove();
+                }
+            }	
         }
         setGround(type, data);
     }
