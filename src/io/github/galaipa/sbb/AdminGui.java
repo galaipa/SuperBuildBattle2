@@ -61,6 +61,7 @@ public class AdminGui implements Listener {
             inv.addItem(item(Material.STAINED_CLAY, 5, a.getID(), ChatColor.GREEN + "Arena " + a.getID()));
         }
         inv.addItem(item(Material.STAINED_CLAY, 4, 1, ChatColor.GREEN + "New Arena"));
+        inv.addItem(item(Material.STAINED_CLAY, 1, 1, ChatColor.RED + "Close Menu"));
         p.updateInventory();
     }
 
@@ -83,6 +84,7 @@ public class AdminGui implements Listener {
         inv.addItem(item(Material.STAINED_CLAY, 3, 1, ChatColor.GREEN + "Set lobby spawnpoint"));
         inv.addItem(item(Material.STAINED_CLAY, 4, 1, ChatColor.GREEN + "Clear"));
         inv.addItem(item(Material.STAINED_CLAY, 13, 1, ChatColor.GREEN + "Next step"));
+        inv.addItem(item(Material.STAINED_CLAY, 1, 1, ChatColor.RED + "Abort"));
         p.updateInventory();
     }
 
@@ -152,6 +154,16 @@ public class AdminGui implements Listener {
                             return;
                         }
                         SetupInventory2(p, 1);
+                    }else if (izena.equalsIgnoreCase(ChatColor.RED + "Abort")) {
+                        event.setCancelled(true);
+                        ArenaManager.admin = false;
+                        setup = false;
+                        time = 1;
+                        players1 = 1;
+                        players2 = 1;
+                        timeVote = 1;
+                        p.getInventory().clear();
+                        p.sendMessage(ChatColor.YELLOW + "[Build Battle] " + ChatColor.RED + "New arena aborted");
                     } else if (event.getAction() == Action.RIGHT_CLICK_AIR && izena.equalsIgnoreCase(ChatColor.GREEN + "Point A") || event.getAction() == Action.RIGHT_CLICK_AIR && izena.equalsIgnoreCase(ChatColor.GREEN + "Point B")) {
                         event.setCancelled(true);
                         p.sendMessage(ChatColor.YELLOW + "[Build Battle] " + ChatColor.GREEN + "Select the two points placing the blocks");
@@ -214,6 +226,9 @@ public class AdminGui implements Listener {
                         int id = i.getAmount();
                         arenaId = id;
                         AdminGui.adminGui(p);
+                    }else if (izena.equalsIgnoreCase(ChatColor.RED + "Close Menu")) {
+                        ArenaManager.admin = false;
+                        p.getInventory().clear();
                     }
                 } else {
 

@@ -51,7 +51,7 @@ public class InGameGui implements Listener {
     }
     public static void timeGui() {
         timeInventory  = Bukkit.createInventory(null, 9, "Time");
-        timeInventory.setItem(2, item(Material.STAINED_CLAY,9,1,ChatColor.BLUE + "3:00"));
+        timeInventory.setItem(2, item(Material.STAINED_CLAY,8,1,ChatColor.BLUE + "3:00"));
         timeInventory.setItem(3, item(Material.STAINED_CLAY,4,1,ChatColor.BLUE + "6:00"));
         timeInventory.setItem(4, item(Material.STAINED_CLAY,6,1,ChatColor.BLUE + "12:00"));
         timeInventory.setItem(5, item(Material.STAINED_CLAY,1,1,ChatColor.BLUE + "18:00"));

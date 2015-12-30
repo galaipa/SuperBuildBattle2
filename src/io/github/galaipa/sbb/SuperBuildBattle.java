@@ -138,7 +138,7 @@ public class SuperBuildBattle extends JavaPlugin {
                 if(args.length <2){
                     p.sendMessage(ChatColor.YELLOW + "[Build Battle] " + ChatColor.RED + "You must specify the arena number");
                 }else{
-                    p.sendMessage(ChatColor.YELLOW + "[Build Battle] " + ChatColor.GREEN + "You forced the game to stop");
+                    p.sendMessage(ChatColor.YELLOW + "[Build Battle] " + ChatColor.GREEN + "Use the /bbadmin gui to stop the game");
                     //reset();
                 }
             }else if (args[0].equalsIgnoreCase("version")) {

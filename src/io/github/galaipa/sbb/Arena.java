@@ -189,7 +189,9 @@ public class Arena {
     }
 
     public void voting() {
-        SpigBoard.remove(SpigBoard.getEntry("timer"));
+        if(SpigBoard.getEntry("timer") != null){
+            SpigBoard.remove(SpigBoard.getEntry("timer"));
+        }
         SpigBoard.add("player",ChatColor.GREEN + getTr("19") + ": ",3);
         for (ArenaPlayer j : getPlayers()) {
             Player p = j.getPlayer();
@@ -344,6 +346,8 @@ public class Arena {
         currentVotedPlayer = null;
         players.clear();
         botoa.clear();
+        debug("Reset OK");
+        ArenaManager.getManager().loadArenas();
     }
 
     public void minimunReached() {
