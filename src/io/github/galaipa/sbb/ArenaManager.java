@@ -23,7 +23,7 @@ public class ArenaManager {
     public static ArenaManager am = new ArenaManager();
     public static boolean debug;
     public static boolean PlayerPoints, Vault, Command, WorldGuarda;
-    Location lobby;
+    //Location lobby;
     List<Arena> arenas = new ArrayList<>();
     SuperBuildBattle plugin = SuperBuildBattle.getInstance();
 
@@ -148,7 +148,8 @@ public class ArenaManager {
                 id = -1;
             }
         } while (id > 0);
-        loadLobby();
+        debug("Arena load finished");
+        //loadLobby(); 
     }
 
     public void createArena(int id, int minPlayers, int maxPlayers, int time, int votingTime, Location lobby, ArrayList<Cuboid> cuboids) {
@@ -246,8 +247,9 @@ public class ArenaManager {
             Double x = plugin.getConfig().getDouble("Lobby.X");
             Double y = plugin.getConfig().getDouble("Lobby.Y");
             Double z = plugin.getConfig().getDouble("Lobby.Z");
-            lobby = new Location(Bukkit.getWorld(w), x, y, z);
+           // lobby = new Location(Bukkit.getWorld(w), x, y, z);
         }
+         //debug("Lobby loaded: " + lobby.toString());
     }
 
     public String getRandomTheme() {

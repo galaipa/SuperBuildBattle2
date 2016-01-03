@@ -154,20 +154,22 @@ public class GameListener implements Listener {
 
     @EventHandler
     public void onLeave(PlayerQuitEvent e) {
-        if (getManager().getArena(e.getPlayer()) != null) {
-            Arena a = getManager().getArena(e.getPlayer());
+        Player p = e.getPlayer();
+        if (getManager().getArena(p) != null) {
+            Arena a = getManager().getArena(p);
+            ArenaPlayer j = a.getArenaPlayer(p);
             ArrayList<String> list = (ArrayList<String>) plugin.getConfig().getStringList("OfflinePlayers");
-            list.add(e.getPlayer().getName());
+            list.add(p.getName());
             plugin.getConfig().set("OfflinePlayers", list);
             plugin.saveConfig();
             if (a.inGame) {
-                a.getArenaPlayer(e.getPlayer()).resetArenas();
-                if (ArenaManager.WorldGuarda) {
+                j.resetArenas();
+               /* if (ArenaManager.WorldGuarda) {
                     WorldGuardOptional.WGregionRM(a.getArenaPlayer(e.getPlayer()).getID(), a.getID());
-                }
+                }*/
             }
-            Offline.put(e.getPlayer(),a.getArenaPlayer(e.getPlayer()));
-            a.players.remove(a.getArenaPlayer(e.getPlayer()));
+            Offline.put(p,j);
+            a.players.remove(j);
             //Taldea ezabatu
            // ArenaManager.getManager().removePlayer(e.getPlayer(), true);
             if (a.players.isEmpty()) {
@@ -180,26 +182,26 @@ public class GameListener implements Listener {
     @EventHandler
     public void onJoin(PlayerJoinEvent e) {
             Player p = e.getPlayer();
-        ArrayList<String> list = (ArrayList<String>) plugin.getConfig().getStringList("OfflinePlayers");
-        if (list.contains(p.getName())) {
-            list.remove(p.getName());
-            plugin.getConfig().set("OfflinePlayers", list);
-            plugin.saveConfig();
-            if(Offline.containsKey(e.getPlayer())){
-                ArenaPlayer j = Offline.get(p);
-                p.teleport(j.getPreSpawn());
-                p.setGameMode(GameMode.SURVIVAL);
-                j.returnInv();
-            }else{
-                p.setGameMode(GameMode.SURVIVAL);
-                p.getInventory().clear();
-                p.getInventory().setArmorContents(null);
-                p.teleport(ArenaManager.getManager().lobby);
+            ArrayList<String> list = (ArrayList<String>) plugin.getConfig().getStringList("OfflinePlayers");
+            if (list.contains(p.getName())) {
+                list.remove(p.getName());
+                plugin.getConfig().set("OfflinePlayers", list);
+                plugin.saveConfig();
+                if(Offline.containsKey(e.getPlayer())){
+                    ArenaPlayer j = Offline.get(p);
+                   // p.teleport(j.getPreSpawn());
+                    p.setGameMode(GameMode.SURVIVAL);
+                    j.returnInv();
+                }else{
+                    p.setGameMode(GameMode.SURVIVAL);
+                    p.getInventory().clear();
+                    p.getInventory().setArmorContents(null);
+                  //  p.teleport(ArenaManager.getManager().lobby);
+                }
+               // e.getPlayer().setGameMode(GameMode.SURVIVAL);
+               // e.getPlayer().teleport(ArenaManager.getManager().lobby);
+                // plugin.returnInventory(e.getPlayer());
             }
-           // e.getPlayer().setGameMode(GameMode.SURVIVAL);
-           // e.getPlayer().teleport(ArenaManager.getManager().lobby);
-            // plugin.returnInventory(e.getPlayer());
-        }
 
     }
 
