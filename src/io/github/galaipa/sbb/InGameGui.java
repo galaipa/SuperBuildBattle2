@@ -232,6 +232,15 @@ public class InGameGui implements Listener {
                     if (izena.equalsIgnoreCase(ChatColor.GREEN + "TNT")) {
                         ParticleEffect.EXPLOSION_NORMAL.display(10, 10, 10, 10, 20, p.getLocation(), p);
                     }
+                }else{
+                    if(event.getCurrentItem() != null){
+                        ItemStack clicked = event.getCurrentItem();
+                        if (clicked.hasItemMeta() && clicked.getItemMeta().hasDisplayName()) {
+                            if(clicked.getItemMeta().getDisplayName().equalsIgnoreCase(ChatColor.BLUE + "Menu")){
+                                event.setCancelled(true);
+                            }
+                        }
+                }
                 }
             }
         }

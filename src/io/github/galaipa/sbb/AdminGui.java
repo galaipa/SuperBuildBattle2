@@ -241,6 +241,7 @@ public class AdminGui implements Listener {
                         String izena = p.getItemInHand().getItemMeta().getDisplayName();
                         if (izena.equalsIgnoreCase(ChatColor.BLUE + "Menu")) {
                             event.getPlayer().openInventory(myInventory);
+                            event.setCancelled(true);
                         }
                     }
                 }
