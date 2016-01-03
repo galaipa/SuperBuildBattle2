@@ -74,8 +74,11 @@ public class Arena {
 
     public void Broadcast(String msg) {
         for (ArenaPlayer j : players) {
-            j.getPlayer().sendMessage(msg);
+            if( j.getPlayer().isOnline()){
+                j.getPlayer().sendMessage(msg);
+            }
         }
+            
     }
 
     public void sendTitleAll(Integer fadeIn, Integer stay, Integer fadeOut, String title, String subtitle) {
@@ -144,7 +147,9 @@ public class Arena {
         SpigBoard.add("theme1", ChatColor.GREEN + getTr("17") + ":", 5);
         SpigBoard.add("theme", ChatColor.YELLOW + theme, 4);
         for (ArenaPlayer j : getPlayers()) {
+            if(j.getPlayer().isOnline()){
             SpigBoard.add(j.getPlayer());
+            }
         }
         new BukkitRunnable() {
             int seconds = 0;

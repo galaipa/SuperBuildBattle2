@@ -1,7 +1,6 @@
 package io.github.galaipa.sbb;
 
 import org.bukkit.ChatColor;
-import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -18,10 +17,13 @@ import java.util.ArrayList;
 
 import static io.github.galaipa.sbb.ArenaManager.getManager;
 import static io.github.galaipa.sbb.SuperBuildBattle.getTr;
+import java.util.HashMap;
+import org.bukkit.GameMode;
 
 
 public class GameListener implements Listener {
     SuperBuildBattle plugin = SuperBuildBattle.getInstance();
+    public static HashMap<Player, ArenaPlayer> Offline = new HashMap<>();
 
     @EventHandler(priority = EventPriority.LOW)
     public void onInventoryClick(PlayerInteractEvent event) {
@@ -164,8 +166,10 @@ public class GameListener implements Listener {
                     WorldGuardOptional.WGregionRM(a.getArenaPlayer(e.getPlayer()).getID(), a.getID());
                 }
             }
+            Offline.put(e.getPlayer(),a.getArenaPlayer(e.getPlayer()));
+            a.players.remove(a.getArenaPlayer(e.getPlayer()));
             //Taldea ezabatu
-            ArenaManager.getManager().removePlayer(e.getPlayer(), true);
+           // ArenaManager.getManager().removePlayer(e.getPlayer(), true);
             if (a.players.isEmpty()) {
                 a.reset();
             }
@@ -175,13 +179,25 @@ public class GameListener implements Listener {
 
     @EventHandler
     public void onJoin(PlayerJoinEvent e) {
+            Player p = e.getPlayer();
         ArrayList<String> list = (ArrayList<String>) plugin.getConfig().getStringList("OfflinePlayers");
-        if (list.contains(e.getPlayer().getName())) {
-            list.remove(e.getPlayer().getName());
+        if (list.contains(p.getName())) {
+            list.remove(p.getName());
             plugin.getConfig().set("OfflinePlayers", list);
             plugin.saveConfig();
-            e.getPlayer().setGameMode(GameMode.SURVIVAL);
-            e.getPlayer().teleport(ArenaManager.getManager().lobby);
+            if(Offline.containsKey(e.getPlayer())){
+                ArenaPlayer j = Offline.get(p);
+                p.teleport(j.getPreSpawn());
+                p.setGameMode(GameMode.SURVIVAL);
+                j.returnInv();
+            }else{
+                p.setGameMode(GameMode.SURVIVAL);
+                p.getInventory().clear();
+                p.getInventory().setArmorContents(null);
+                p.teleport(ArenaManager.getManager().lobby);
+            }
+           // e.getPlayer().setGameMode(GameMode.SURVIVAL);
+           // e.getPlayer().teleport(ArenaManager.getManager().lobby);
             // plugin.returnInventory(e.getPlayer());
         }
 

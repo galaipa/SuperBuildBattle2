@@ -1,5 +1,6 @@
 package io.github.galaipa.sbb;
 
+import com.darkblade12.particleeffect.ParticleEffect;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -25,10 +26,12 @@ public class InGameGui implements Listener {
     public static Inventory skullsInventory;
     public static Inventory weatherInventory;
     public static Inventory timeInventory;
+    public static Inventory partInventory;
     public static Map<String, String> skulls = new HashMap<>();
 
     public static void userGui() {
         myInventory = Bukkit.createInventory(null, 9, "InGame Menu");
+     //   myInventory.setItem(1, item(Material.BARRIER, 0, 1, ChatColor.GREEN + "Particles", "Reset your plot"));
         myInventory.setItem(2, item(Material.BARRIER, 0, 1, ChatColor.RED + "Clear arena", "Reset your plot"));
         myInventory.setItem(3, item(Material.WOOD_PLATE, 0, 1, ChatColor.GREEN + "Set ground", "Drag the block you want to put as floor"));
         myInventory.setItem(4,item(Material.SULPHUR,0,1,ChatColor.GREEN + "Weather", "Set the Weather in your plot"));
@@ -37,6 +40,7 @@ public class InGameGui implements Listener {
         skullGui();
         weatherGui();
         timeGui();
+        partGui();
     }
 
     public static void giveUserGui(Player p) {
@@ -57,6 +61,10 @@ public class InGameGui implements Listener {
         timeInventory.setItem(5, item(Material.STAINED_CLAY,1,1,ChatColor.BLUE + "18:00"));
         timeInventory.setItem(6, item(Material.STAINED_CLAY,9,1,ChatColor.BLUE + "24:00"));
         
+    }
+    public static void partGui(){
+       partInventory = Bukkit.createInventory(null, 9, "Particles");
+       partInventory.addItem(item(Material.TNT,8,1,ChatColor.GREEN + "TNT"));
     }
     public static void skullGui() {
         skullsInventory = Bukkit.createInventory(null, 54, "Skulls");
@@ -144,6 +152,9 @@ public class InGameGui implements Listener {
                     }else if (izena.equalsIgnoreCase(ChatColor.GREEN + "Time")) {
                         event.setCancelled(true);
                         player.openInventory(timeInventory);
+                    }else if (izena.equalsIgnoreCase(ChatColor.GREEN + "Particles")) {
+                        event.setCancelled(true);
+                        player.openInventory(partInventory);
                     }
                         
                     /*else if (izena.equalsIgnoreCase(ChatColor.GREEN + "Banner")) {
@@ -208,6 +219,19 @@ public class InGameGui implements Listener {
                     ItemStack i = event.getCurrentItem();
                     player.getInventory().addItem(i);
                     player.closeInventory();
+                }if (inventory.getName().equals(partInventory.getName()) && event.getCurrentItem() != null) {
+                    ItemStack clicked = event.getCurrentItem();
+                    Player p = (Player) event.getWhoClicked();
+                    ArenaPlayer t = a.getArenaPlayer(p);
+                    String izena;
+                    if (clicked.hasItemMeta() && clicked.getItemMeta().hasDisplayName()) {
+                        izena = clicked.getItemMeta().getDisplayName();
+                    } else {
+                        return;
+                    }
+                    if (izena.equalsIgnoreCase(ChatColor.GREEN + "TNT")) {
+                        ParticleEffect.EXPLOSION_NORMAL.display(10, 10, 10, 10, 20, p.getLocation(), p);
+                    }
                 }
             }
         }

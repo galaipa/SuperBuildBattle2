@@ -123,7 +123,6 @@ public class ArenaManager {
         } else {
             p.sendMessage(ChatColor.GREEN + "[Build Battle] " + ChatColor.RED + getTr("5"));
         }
-
     }
 
     public Arena getArena(Player p) {
