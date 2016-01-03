@@ -357,17 +357,18 @@ public class Arena {
 
     public void minimunReached() {
         new BukkitRunnable() {
-            int a = 0;
-
+            int a = 60;
             @Override
             public void run() {
-                if (maxPlayers == minPlayers) {
-                    cancel();
-                    start();
-                } else if (a == 10) {
+                if (maxPlayers == players.size()) {
+                    a = 15;
+                } else if (a == 0) {
                     cancel();
                     start();
                 } else {
+                    for(ArenaPlayer p : players){
+                         p.getPlayer().setLevel(a);
+                    }
                     a++;
                 }
             }
