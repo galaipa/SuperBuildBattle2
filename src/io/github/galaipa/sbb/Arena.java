@@ -94,50 +94,32 @@ public class Arena {
         //  Broadcast("AssignArenas OK");
         theme = ArenaManager.getManager().getRandomTheme();
         Broadcast(ChatColor.GREEN + getTr("13"));
-        new BukkitRunnable() {
-            int countdown = 10;
-
-            @Override
-            public void run() {
-                for (ArenaPlayer j : getPlayers()) {
-                    Player p = j.getPlayer();
-                    p.setLevel(countdown);
-                    //   p.sendMessage(ChatColor.GREEN + " " + countdown);
-                    p.getWorld().playSound(p.getLocation(), Sound.NOTE_STICKS, 10, 1);
-                    ArenaManager.sendTitle(p, 20, 40, 20, Integer.toString(countdown), "");
-                }
-                countdown--;
-                if (countdown < 0) {
-                    Broadcast(ChatColor.GREEN + "-----------------------------------------------");
-                    Broadcast(ChatColor.BOLD.toString());
-                    Broadcast(ChatColor.WHITE + "                         Super Build Battle");
-                    Broadcast(ChatColor.GREEN + "       " + getTr("15") + " " + time + " " + getTr("16"));
-                    Broadcast(ChatColor.GREEN + "         " + getTr("17") + ": " + ChatColor.YELLOW + theme);
-                    Broadcast(ChatColor.BOLD.toString());
-                    Broadcast(ChatColor.GREEN + "-----------------------------------------------");
-                    sendTitleAll(20, 40, 20, ChatColor.GREEN + theme, getTr("14"));
-                    for (ArenaPlayer j : getPlayers()) {
-                        final Player p = j.getPlayer();
-                        p.teleport(j.getSpawnPoint());
-                        Bukkit.getScheduler().runTaskLater(plugin, new Runnable() {
-                            @Override
-                            public void run() {
-                                p.setGameMode(GameMode.CREATIVE);
-                                p.getWorld().playSound(p.getLocation(), Sound.NOTE_PLING, 10, 1);
-                                InGameGui.giveUserGui(p);
-                                InGameGui.userGui();
-                                if (plugin.getConfig().getBoolean("StartCommand.Enabled")) {
-                                    plugin.getServer().dispatchCommand(plugin.getServer().getConsoleSender(), (plugin.getConfig().getString("StartCommand.Command")).replace("$player$", p.getName()));
-                                }
-                            }
-                        }, 5L);
+        Broadcast(ChatColor.GREEN + "-----------------------------------------------");
+        Broadcast(ChatColor.BOLD.toString());
+        Broadcast(ChatColor.WHITE + "                         Super Build Battle");
+        Broadcast(ChatColor.GREEN + "       " + getTr("15") + " " + time + " " + getTr("16"));
+        Broadcast(ChatColor.GREEN + "         " + getTr("17") + ": " + ChatColor.YELLOW + theme);
+        Broadcast(ChatColor.BOLD.toString());
+        Broadcast(ChatColor.GREEN + "-----------------------------------------------");
+        sendTitleAll(20, 40, 20, ChatColor.GREEN + theme, getTr("14"));
+        for (ArenaPlayer j : getPlayers()) {
+            final Player p = j.getPlayer();
+            p.teleport(j.getSpawnPoint());
+            Bukkit.getScheduler().runTaskLater(plugin, new Runnable() {
+                @Override
+                public void run() {
+                    p.setGameMode(GameMode.CREATIVE);
+                    p.getWorld().playSound(p.getLocation(), Sound.NOTE_PLING, 10, 1);
+                    InGameGui.giveUserGui(p);
+                    InGameGui.userGui();
+                    if (plugin.getConfig().getBoolean("StartCommand.Enabled")) {
+                        plugin.getServer().dispatchCommand(plugin.getServer().getConsoleSender(), (plugin.getConfig().getString("StartCommand.Command")).replace("$player$", p.getName()));
                     }
-                    inGame = true;
-                    cancel();
-                    Building();
                 }
-            }
-        }.runTaskTimer(plugin, 0, 20);
+            }, 5L);
+        }
+        inGame = true;
+        Building();
     }
 
     public void Building() {
@@ -369,12 +351,19 @@ public class Arena {
                     for(ArenaPlayer p : players){
                          p.getPlayer().setLevel(a);
                     }
-                    a++;
+                    a--;
+                }
+                if(a == 3 || a == 2 || a== 1 ){
+                    for(ArenaPlayer j : players){
+                        Player p = j.getPlayer();
+                        p.getWorld().playSound(p.getLocation(), Sound.NOTE_STICKS, 10, 1);
+                        ArenaManager.sendTitle(p, 20, 40, 20,ChatColor.YELLOW + Integer.toString( a), "");
+                    }
                 }
             }
         }.runTaskTimer(plugin, 0, 20);
     }
-
+    
     public ArenaPlayer getPlayer(int index) {
         return players.get(index);
     }
