@@ -200,7 +200,7 @@ public class AdminGui implements Listener {
                             return;
                         }
                         p.sendMessage(ChatColor.YELLOW + "[Build Battle] " + ChatColor.GREEN + "You forced the game to start");
-                        a.start();
+                        a.forceStart();
                         setup = false;
                         //admin = false;
                     } else if (izena.equalsIgnoreCase(ChatColor.GREEN + "Force STOP game")) {

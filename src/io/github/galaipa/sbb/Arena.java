@@ -7,7 +7,6 @@ import org.bukkit.entity.Firework;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.meta.FireworkMeta;
-import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.*;
 
@@ -28,6 +27,7 @@ public class Arena {
     String timer = null;
     ArenaPlayer currentVotedPlayer;
     SuperBuildBattle plugin = SuperBuildBattle.getInstance();
+    int schedulers;
     private volatile boolean running = false;
 
     public Arena(int id, int minPlayers, int maxPlayers, int time, int votingTime, Location lobby, Cuboid[] cuboid) {
@@ -133,7 +133,7 @@ public class Arena {
             SpigBoard.add(j.getPlayer());
             }
         }
-        new BukkitRunnable() {
+        schedulers = Bukkit.getScheduler().scheduleSyncRepeatingTask(plugin, new Runnable(){
             int seconds = 0;
             int minutes = time;
 
@@ -143,7 +143,7 @@ public class Arena {
                     sendTitleAll(20, 40, 20, Integer.toString(minutes), getTr("29"));
                 }
                 if (minutes == 0 && seconds == 0) {
-                    cancel();
+                    Bukkit.getScheduler().cancelTask(schedulers);
                     voting = true;
                     voting();
                 } else if (seconds == 0) {
@@ -172,7 +172,7 @@ public class Arena {
                     }
                 }
             }
-        }.runTaskTimer(plugin, 0, 20);
+        }, 0, 20);
     }
 
     public void voting() {
@@ -195,7 +195,7 @@ public class Arena {
             inv.addItem(AdminGui.item(Material.STAINED_GLASS_PANE, 13, 1, ChatColor.GREEN + getTr("37")));
             p.updateInventory();
         }
-        new BukkitRunnable() {
+        schedulers = Bukkit.getScheduler().scheduleSyncRepeatingTask(plugin, new Runnable(){
             int current = 0;
             String timer = "";
             String reset = "";
@@ -210,11 +210,9 @@ public class Arena {
                         }
                     }
                 }
-
                 botoa.clear();
-
                 if (current >= players.size()) {
-                    cancel();
+                    Bukkit.getScheduler().cancelTask(schedulers);
                     winner();
                 } else {
                     currentVotedPlayer = getPlayer(current);
@@ -249,7 +247,7 @@ public class Arena {
                 }
 
             }
-        }.runTaskTimer(plugin, 0, 20 * votingtime);
+        }, 0, 20 * votingtime);
     }
 
     public void winner() {
@@ -300,7 +298,7 @@ public class Arena {
             }
         }
         final ArenaPlayer finalWinner = winner1;
-        new BukkitRunnable() {
+        schedulers = Bukkit.getScheduler().scheduleSyncRepeatingTask(plugin, new Runnable(){
             int zenbat = 0;
             @Override
             public void run() {
@@ -311,14 +309,15 @@ public class Arena {
                 f.setFireworkMeta(fm);
                 zenbat++;
                 if (zenbat == 10) {
-                    cancel();
+                    Bukkit.getScheduler().cancelTask(schedulers);
                     reset();
                 }
             }
-        }.runTaskTimer(plugin, 0, 20);
+        }, 0, 20);
     }
 
     public void reset() {
+        Bukkit.getScheduler().cancelTask(schedulers);
         running = false;
         Iterator<ArenaPlayer> it = players.iterator();
         while (it.hasNext()) {
@@ -338,14 +337,14 @@ public class Arena {
     }
 
     public void minimunReached() {
-        new BukkitRunnable() {
+        schedulers = Bukkit.getScheduler().scheduleSyncRepeatingTask(plugin, new Runnable(){
             int a = 60;
             @Override
             public void run() {
                 if (maxPlayers == players.size()) {
                     a = 15;
                 } else if (a == 0) {
-                    cancel();
+                    Bukkit.getScheduler().cancelTask(schedulers);
                     start();
                 } else {
                     for(ArenaPlayer p : players){
@@ -361,9 +360,29 @@ public class Arena {
                     }
                 }
             }
-        }.runTaskTimer(plugin, 0, 20);
+        }, 0, 20);
     }
-    
+    public void forceStart(){
+        Bukkit.getScheduler().cancelTask(schedulers);
+        schedulers = Bukkit.getScheduler().scheduleSyncRepeatingTask(plugin, new Runnable(){
+            int a = 3;
+            @Override
+            public void run() {
+                if(a == 0){
+                    Bukkit.getScheduler().cancelTask(schedulers);
+                    start();
+                }else{
+                    for(ArenaPlayer j : players){
+                        Player p = j.getPlayer();
+                        p.getPlayer().setLevel(a);
+                        p.getWorld().playSound(p.getLocation(), Sound.NOTE_STICKS, 10, 1);
+                        ArenaManager.sendTitle(p, 20, 40, 20,ChatColor.YELLOW + Integer.toString( a), "");
+                    }
+                   a--; 
+                }
+            }
+            }, 0, 20);
+    }
     public ArenaPlayer getPlayer(int index) {
         return players.get(index);
     }

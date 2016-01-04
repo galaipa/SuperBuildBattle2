@@ -122,6 +122,11 @@ public class ArenaPlayer {
         p.getInventory().setArmorContents(armor);
         p.setLevel(exp);
     }
+    public void returnInv(Player p1) {
+        p1.getInventory().setContents(inv);
+        p1.getInventory().setArmorContents(armor);
+        p1.setLevel(exp);
+    }
 
     public Boolean checkPlayer(Player p) {
         return player.equals(p);

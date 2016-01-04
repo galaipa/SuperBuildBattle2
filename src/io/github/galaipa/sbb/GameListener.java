@@ -1,5 +1,6 @@
 package io.github.galaipa.sbb;
 
+import static io.github.galaipa.sbb.ArenaManager.debug;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -18,12 +19,13 @@ import java.util.ArrayList;
 import static io.github.galaipa.sbb.ArenaManager.getManager;
 import static io.github.galaipa.sbb.SuperBuildBattle.getTr;
 import java.util.HashMap;
+import java.util.Map;
 import org.bukkit.GameMode;
 
 
 public class GameListener implements Listener {
     SuperBuildBattle plugin = SuperBuildBattle.getInstance();
-    public static HashMap<Player, ArenaPlayer> Offline = new HashMap<>();
+    public static Map<String, ArenaPlayer> Offline = new HashMap<>();
 
     @EventHandler(priority = EventPriority.LOW)
     public void onInventoryClick(PlayerInteractEvent event) {
@@ -168,7 +170,7 @@ public class GameListener implements Listener {
                     WorldGuardOptional.WGregionRM(a.getArenaPlayer(e.getPlayer()).getID(), a.getID());
                 }*/
             }
-            Offline.put(p,j);
+            Offline.put(p.getName(),j);
             a.players.remove(j);
             //Taldea ezabatu
            // ArenaManager.getManager().removePlayer(e.getPlayer(), true);
@@ -187,12 +189,15 @@ public class GameListener implements Listener {
                 list.remove(p.getName());
                 plugin.getConfig().set("OfflinePlayers", list);
                 plugin.saveConfig();
-                if(Offline.containsKey(e.getPlayer())){
-                    ArenaPlayer j = Offline.get(p);
-                   // p.teleport(j.getPreSpawn());
+                debug("Player detected: " + p.getName());
+                if(Offline.containsKey(p.getName())){
+                    debug("Player data found");
+                    ArenaPlayer j = Offline.get(p.getName());
+                    p.teleport(j.getPreSpawn());
                     p.setGameMode(GameMode.SURVIVAL);
-                    j.returnInv();
+                    j.returnInv(p);
                 }else{
+                    debug("Player data not found");
                     p.setGameMode(GameMode.SURVIVAL);
                     p.getInventory().clear();
                     p.getInventory().setArmorContents(null);
