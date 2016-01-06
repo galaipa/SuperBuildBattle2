@@ -6,10 +6,8 @@ Debug: false
 CmdWhitelist:
     - bb
     - buildbattle
-OfflinePlayers:
-    - ''
-ItemBlackList:
-    - ''
+OfflinePlayers: []
+ItemBlackList: []
 StartCommand:
     Enabled : false
     Command: ''
