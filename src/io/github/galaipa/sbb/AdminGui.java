@@ -238,10 +238,13 @@ public class AdminGui implements Listener {
                 if (getManager().getArena(event.getPlayer()) != null) {
                     Arena a = getManager().getArena(event.getPlayer());
                     if (a.inGame == true) {
-                        String izena = p.getItemInHand().getItemMeta().getDisplayName();
-                        if (izena.equalsIgnoreCase(ChatColor.BLUE + "Menu")) {
-                            event.getPlayer().openInventory(myInventory);
-                            event.setCancelled(true);
+                        if (p.getItemInHand().hasItemMeta()) {
+                            if(p.getItemInHand().getItemMeta().hasDisplayName()){
+                                if(p.getItemInHand().getItemMeta().getDisplayName().equalsIgnoreCase(ChatColor.BLUE + "Menu")){
+                                    event.getPlayer().openInventory(myInventory);
+                                    event.setCancelled(true);
+                                }
+                        }
                         }
                     }
                 }
