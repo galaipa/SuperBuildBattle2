@@ -66,6 +66,12 @@ public class GameListener implements Listener {
                         }
                     }
                 }
+            }else{
+                if(event.getClickedBlock() != null){
+                    if(event.getClickedBlock().getType() == Material.ENDER_CHEST){
+                        event.setCancelled(true);
+                    }
+                }
             }
         }
 
@@ -84,7 +90,6 @@ public class GameListener implements Listener {
     public void PlayerCommand(PlayerCommandPreprocessEvent event) {
         if (getManager().getArena(event.getPlayer()) != null) {
             Arena a = getManager().getArena(event.getPlayer());
-            if (a.inGame) {
                 Player p = event.getPlayer();
                 ArrayList<String> list = (ArrayList<String>) plugin.getConfig().getStringList("CmdWhitelist");
                 for (String s : list) {
@@ -95,8 +100,6 @@ public class GameListener implements Listener {
                 event.setCancelled(true);
                 p.sendMessage(ChatColor.GREEN + "[BuildBattle]" + ChatColor.RED + "You can't use command during the game");
             }
-
-        }
     }
 
     @EventHandler
