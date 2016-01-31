@@ -339,13 +339,16 @@ public class Arena {
     public void minimunReached() {
         schedulers = Bukkit.getScheduler().scheduleSyncRepeatingTask(plugin, new Runnable(){
             int a = 60;
+            Boolean max = false;
             @Override
             public void run() {
-                if (maxPlayers == players.size()) {
+                if (maxPlayers == players.size() && max) {
                     a = 15;
+                    return;
                 } else if (a == 0) {
                     Bukkit.getScheduler().cancelTask(schedulers);
                     start();
+                    return;
                 } else {
                     for(ArenaPlayer p : players){
                          p.getPlayer().setLevel(a);
