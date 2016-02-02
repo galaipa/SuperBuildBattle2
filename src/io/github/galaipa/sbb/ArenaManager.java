@@ -1,14 +1,11 @@
 package io.github.galaipa.sbb;
 
+import com.connorlinfoot.titleapi.TitleAPI;
 import net.milkbowl.vault.economy.EconomyResponse;
-import net.minecraft.server.v1_8_R3.IChatBaseComponent;
-import net.minecraft.server.v1_8_R3.PacketPlayOutTitle;
-import net.minecraft.server.v1_8_R3.PlayerConnection;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
-import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.scoreboard.ScoreboardManager;
 
@@ -33,7 +30,8 @@ public class ArenaManager {
 
     //TITLES
     public static void sendTitle(Player player, Integer fadeIn, Integer stay, Integer fadeOut, String title, String subtitle) {
-        PlayerConnection connection = ((CraftPlayer) player).getHandle().playerConnection;
+        TitleAPI.sendTitle(player, fadeIn, stay, fadeOut, title, subtitle);
+        /*PlayerConnection connection = ((CraftPlayer) player).getHandle().playerConnection;
 
         PacketPlayOutTitle packetPlayOutTimes = new PacketPlayOutTitle(PacketPlayOutTitle.EnumTitleAction.TIMES, null, fadeIn, stay, fadeOut);
         connection.sendPacket(packetPlayOutTimes);
@@ -52,7 +50,7 @@ public class ArenaManager {
             IChatBaseComponent titleMain = IChatBaseComponent.ChatSerializer.a("{\"text\": \"" + title + "\"}");
             PacketPlayOutTitle packetPlayOutTitle = new PacketPlayOutTitle(PacketPlayOutTitle.EnumTitleAction.TITLE, titleMain);
             connection.sendPacket(packetPlayOutTitle);
-        }
+        }*/
     }
 
     public static void debug(String msg) {
