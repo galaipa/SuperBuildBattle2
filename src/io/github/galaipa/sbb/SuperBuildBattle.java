@@ -248,8 +248,8 @@ public class SuperBuildBattle extends JavaPlugin {
         copyTranslation("custom");
         translation = getConfig().getString("Language");
         File languageDir = new File(getDataFolder(), "lang");
-        if (languageDir.exists() && new File(languageDir, translation + ".yml").exists()){
-            File languageFile = new File(getDataFolder(), "lang" + File.separator + translation + ".yml");
+        File languageFile;
+        if (languageDir.exists() && (languageFile = new File(languageDir, translation + ".yml")).exists()){
             yaml = YamlConfiguration.loadConfiguration(languageFile);
         } else {
             InputStream defaultStream = getResource(translation + ".yml");
@@ -257,6 +257,7 @@ public class SuperBuildBattle extends JavaPlugin {
                 yaml = YamlConfiguration.loadConfiguration(defaultStream);
             }else{
                 System.out.println("[SuperBuildBattle] " + translation + ".yml" + " missing! Add it in " + languageDir.getPath());
+                Bukkit.getPluginManager().disablePlugin(this);
             }
         }
     }
