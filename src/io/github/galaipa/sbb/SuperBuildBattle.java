@@ -98,10 +98,10 @@ public class SuperBuildBattle extends JavaPlugin {
         Player p = (Player) sender;
         if (cmd.getName().equalsIgnoreCase("buildbattle")) {
             if (!p.hasPermission("bb.user")) {
-                sender.sendMessage(ChatColor.GREEN + "[Build Battle] " + ChatColor.GREEN + "Super Build Battle by Galapia, moloco, and community");
+                sender.sendMessage(ChatColor.GREEN + "[Build Battle] " + ChatColor.GREEN + "Super Build Battle by Galapia, moloco, Carra and community");
             } else if (args.length < 1) {
-                ArenaManager.sendTitle(p, 20, 40, 20, "&2Super Build Battle", "by Galapia, moloco, and community");
-                sender.sendMessage(ChatColor.GREEN + "[Build Battle] " + ChatColor.RED + "Super Build Battle by Galapia, moloco, and community");
+                ArenaManager.sendTitle(p, 20, 40, 20, "&2Super Build Battle", "by Galapia, moloco, Carra and community");
+                sender.sendMessage(ChatColor.GREEN + "[Build Battle] " + ChatColor.RED + "Super Build Battle by Galapia, moloco, Carra and community");
             } else if (args[0].equalsIgnoreCase("join")) {
                 ArenaManager.getManager().addPlayer(p, p.getLocation());
             } else if (args[0].equalsIgnoreCase("leave")) {
@@ -247,12 +247,17 @@ public class SuperBuildBattle extends JavaPlugin {
     private void loadTranslations() {
         copyTranslation("custom");
         translation = getConfig().getString("Language");
-        if (translation.equalsIgnoreCase("custom")) {
-            File languageFile = new File(getDataFolder() + File.separator + "lang" + File.separator + translation + ".yml");
+        File languageDir = new File(getDataFolder(), "lang");
+        if (languageDir.exists() && new File(languageDir, translation + ".yml").exists()){
+            File languageFile = new File(getDataFolder(), "lang" + File.separator + translation + ".yml");
             yaml = YamlConfiguration.loadConfiguration(languageFile);
         } else {
             InputStream defaultStream = getResource(translation + ".yml");
-            yaml = YamlConfiguration.loadConfiguration(defaultStream);
+            if(defaultStream != null){
+                yaml = YamlConfiguration.loadConfiguration(defaultStream);
+            }else{
+                System.out.println("[SuperBuildBattle] " + translation + ".yml" + " missing! Add it in " + languageDir.getPath());
+            }
         }
     }
 
