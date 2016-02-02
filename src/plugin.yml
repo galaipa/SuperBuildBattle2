@@ -13,7 +13,7 @@ commands:
   buildbattleadmin:
     description: BuildBattle main command
     usage: /<command>  
-    aliases: [bbadmin]  
+    aliases: [bbadmin]
 permissions:
   bb.*:
         description: Gives access to all commands

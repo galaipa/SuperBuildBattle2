@@ -35,6 +35,7 @@ public class AdminGui implements Listener {
     private boolean region = false;
     private boolean setup = false;
 
+
     public static ItemStack item(Material material, int id, int amount, String name) {
         ItemStack b = new ItemStack(material, amount, (short) id);
         ItemMeta metaB = b.getItemMeta();
@@ -100,6 +101,7 @@ public class AdminGui implements Listener {
 
     @EventHandler
     public void onInventoryClick2(PlayerInteractEvent event) {
+        if(!event.getPlayer().hasPermission("bb.admin")) return;
         if (event.getAction() == Action.RIGHT_CLICK_AIR || event.getAction() == Action.RIGHT_CLICK_BLOCK) {
             Player p = event.getPlayer();
             if (p.getItemInHand().getType() == Material.STAINED_CLAY && p.getItemInHand().hasItemMeta() && p.getItemInHand().getItemMeta().hasDisplayName()) {
@@ -230,14 +232,11 @@ public class AdminGui implements Listener {
                         ArenaManager.admin = false;
                         p.getInventory().clear();
                     }
-                } else {
-
                 }
-
             } else if (event.getPlayer().getItemInHand().getType() == Material.ENCHANTED_BOOK) {
                 if (getManager().getArena(event.getPlayer()) != null) {
                     Arena a = getManager().getArena(event.getPlayer());
-                    if (a.inGame == true) {
+                    if (a.inGame) {
                         if (p.getItemInHand().hasItemMeta()) {
                             if(p.getItemInHand().getItemMeta().hasDisplayName()){
                                 if(p.getItemInHand().getItemMeta().getDisplayName().equalsIgnoreCase(ChatColor.BLUE + "Menu")){
@@ -255,22 +254,24 @@ public class AdminGui implements Listener {
 
     @EventHandler
     public void onBlockPlace(BlockPlaceEvent event) {
-        if (setup == true) {
-            if (region == true) {
+        if (setup) {
+            if (region) {
                 Player p = event.getPlayer();
-                if (p.getItemInHand().getType() == Material.STAINED_CLAY) {
-                    String izena = p.getItemInHand().getItemMeta().getDisplayName();
-                    int id = p.getItemInHand().getAmount();
-                    if (izena.equalsIgnoreCase(ChatColor.GREEN + "Point A")) {
-                        event.setCancelled(true);
-                        Location l1 = event.getBlock().getLocation();
-                        location1.put(id, l1);
-                        p.sendMessage(ChatColor.YELLOW + "[Build Battle] " + ChatColor.GREEN + "Point A set to " + l1);
-                    } else if (izena.equalsIgnoreCase(ChatColor.GREEN + "Point B")) {
-                        event.setCancelled(true);
-                        Location l2 = event.getBlock().getLocation();
-                        location2.put(id, l2);
-                        p.sendMessage(ChatColor.YELLOW + "[Build Battle] " + ChatColor.GREEN + "Point B set to " + l2);
+                if(p.hasPermission("bb.admin")){
+                    if (p.getItemInHand() != null && p.getItemInHand().getType() == Material.STAINED_CLAY && p.getItemInHand().hasItemMeta() && p.getItemInHand().getItemMeta().hasDisplayName()) {
+                        String izena = p.getItemInHand().getItemMeta().getDisplayName();
+                        int id = p.getItemInHand().getAmount();
+                        if (izena.equalsIgnoreCase(ChatColor.GREEN + "Point A")) {
+                            event.setCancelled(true);
+                            Location l1 = event.getBlock().getLocation();
+                            location1.put(id, l1);
+                            p.sendMessage(ChatColor.YELLOW + "[Build Battle] " + ChatColor.GREEN + "Point A set to " + l1);
+                        } else if (izena.equalsIgnoreCase(ChatColor.GREEN + "Point B")) {
+                            event.setCancelled(true);
+                            Location l2 = event.getBlock().getLocation();
+                            location2.put(id, l2);
+                            p.sendMessage(ChatColor.YELLOW + "[Build Battle] " + ChatColor.GREEN + "Point B set to " + l2);
+                        }
                     }
                 }
             }
