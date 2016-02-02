@@ -197,10 +197,7 @@ public class Arena {
         }
         schedulers = Bukkit.getScheduler().scheduleSyncRepeatingTask(plugin, new Runnable(){
             int current = 0;
-            String timer = "";
-            String reset = "";
-            String taldekideak = "";
-            
+
             @Override
             public void run() {
                 if (currentVotedPlayer != null) {
@@ -339,10 +336,9 @@ public class Arena {
     public void minimunReached() {
         schedulers = Bukkit.getScheduler().scheduleSyncRepeatingTask(plugin, new Runnable(){
             int a = 60;
-            Boolean max = false;
             @Override
             public void run() {
-                if (maxPlayers == players.size() && max) {
+                if (maxPlayers == players.size()) {
                     a = 15;
                     return;
                 } else if (a == 0) {
