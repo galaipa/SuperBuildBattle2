@@ -338,10 +338,7 @@ public class Arena {
             int a = 60;
             @Override
             public void run() {
-                if (maxPlayers == players.size()) {
-                    a = 15;
-                    return;
-                } else if (a == 0) {
+                if (maxPlayers == players.size() || a == 0) {
                     Bukkit.getScheduler().cancelTask(schedulers);
                     start();
                     return;
