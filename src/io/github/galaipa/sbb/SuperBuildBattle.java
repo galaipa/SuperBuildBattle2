@@ -1,6 +1,5 @@
 package io.github.galaipa.sbb;
 
-import static io.github.galaipa.sbb.ArenaManager.debug;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -9,9 +8,9 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
+import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.bukkit.plugin.PluginDescriptionFile;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -19,6 +18,8 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
+
+import static io.github.galaipa.sbb.ArenaManager.debug;
 
 
 public class SuperBuildBattle extends JavaPlugin {
@@ -82,7 +83,10 @@ public class SuperBuildBattle extends JavaPlugin {
             PlayerPointsOptional.hookPlayerPoints(getServer().getPluginManager().getPlugin("PlayerPoints"));
             ArenaManager.PlayerPoints = true;
             debug("PlayerPoints: true");
-        }else { ArenaManager.PlayerPoints = false; debug("PlayerPoints: false");}
+        } else {
+            ArenaManager.PlayerPoints = false;
+            debug("PlayerPoints: false");
+        }
         ArenaManager.Command = getConfig().getBoolean("Rewards.Command.Enabled");
         ArenaManager.debug = getConfig().getBoolean("Debug");
         ArenaManager.WorldGuarda = getServer().getPluginManager().getPlugin("WorldGuard") != null;
@@ -128,20 +132,20 @@ public class SuperBuildBattle extends JavaPlugin {
                 AdminGui.arenaGui(p);
                 p.sendMessage(ChatColor.YELLOW + "[Build Battle] " + ChatColor.GREEN + "Use the items in your hand to setup SuperBuildBattle");
             } else if (args[0].equalsIgnoreCase("start")) {
-                if(args.length <2){
+                if (args.length < 2) {
                     p.sendMessage(ChatColor.YELLOW + "[Build Battle] " + ChatColor.RED + "You must specify the arena number");
-                }else{
+                } else {
                     p.sendMessage(ChatColor.YELLOW + "[Build Battle] " + ChatColor.GREEN + "You forced the game to start");
                     ArenaManager.getManager().getArena(Integer.parseInt(args[1])).forceStart();
                 }
             } else if (args[0].equalsIgnoreCase("stop")) {
-                if(args.length <2){
+                if (args.length < 2) {
                     p.sendMessage(ChatColor.YELLOW + "[Build Battle] " + ChatColor.RED + "You must specify the arena number");
-                }else{
+                } else {
                     p.sendMessage(ChatColor.YELLOW + "[Build Battle] " + ChatColor.GREEN + "Use the /bbadmin gui to stop the game");
                     //reset();
                 }
-            }else if (args[0].equalsIgnoreCase("version")) {
+            } else if (args[0].equalsIgnoreCase("version")) {
                 PluginDescriptionFile pdfFile = this.getDescription();
                 String version1 = pdfFile.getVersion();
                 p.sendMessage(ChatColor.YELLOW + "[Build Battle] " + ChatColor.GREEN + "Version: " + version1);
@@ -249,13 +253,13 @@ public class SuperBuildBattle extends JavaPlugin {
         translation = getConfig().getString("Language");
         File languageDir = new File(getDataFolder(), "lang");
         File languageFile;
-        if (languageDir.exists() && (languageFile = new File(languageDir, translation + ".yml")).exists()){
+        if (languageDir.exists() && (languageFile = new File(languageDir, translation + ".yml")).exists()) {
             yaml = YamlConfiguration.loadConfiguration(languageFile);
         } else {
             InputStream defaultStream = getResource(translation + ".yml");
-            if(defaultStream != null){
+            if (defaultStream != null) {
                 yaml = YamlConfiguration.loadConfiguration(defaultStream);
-            }else{
+            } else {
                 System.out.println("[SuperBuildBattle] " + translation + ".yml" + " missing! Add it in " + languageDir.getPath());
                 Bukkit.getPluginManager().disablePlugin(this);
             }

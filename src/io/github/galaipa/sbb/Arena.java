@@ -74,11 +74,11 @@ public class Arena {
 
     public void Broadcast(String msg) {
         for (ArenaPlayer j : players) {
-            if( j.getPlayer().isOnline()){
+            if (j.getPlayer().isOnline()) {
                 j.getPlayer().sendMessage(msg);
             }
         }
-            
+
     }
 
     public void sendTitleAll(Integer fadeIn, Integer stay, Integer fadeOut, String title, String subtitle) {
@@ -129,11 +129,11 @@ public class Arena {
         SpigBoard.add("theme1", ChatColor.GREEN + getTr("17") + ":", 5);
         SpigBoard.add("theme", ChatColor.YELLOW + theme, 4);
         for (ArenaPlayer j : getPlayers()) {
-            if(j.getPlayer().isOnline()){
-            SpigBoard.add(j.getPlayer());
+            if (j.getPlayer().isOnline()) {
+                SpigBoard.add(j.getPlayer());
             }
         }
-        schedulers = Bukkit.getScheduler().scheduleSyncRepeatingTask(plugin, new Runnable(){
+        schedulers = Bukkit.getScheduler().scheduleSyncRepeatingTask(plugin, new Runnable() {
             int seconds = 0;
             int minutes = time;
 
@@ -176,10 +176,10 @@ public class Arena {
     }
 
     public void voting() {
-        if(SpigBoard.getEntry("timer") != null){
+        if (SpigBoard.getEntry("timer") != null) {
             SpigBoard.remove(SpigBoard.getEntry("timer"));
         }
-        SpigBoard.add("player",ChatColor.GREEN + getTr("19") + ": ",3);
+        SpigBoard.add("player", ChatColor.GREEN + getTr("19") + ": ", 3);
         for (ArenaPlayer j : getPlayers()) {
             Player p = j.getPlayer();
             Inventory inv = p.getInventory();
@@ -195,7 +195,7 @@ public class Arena {
             inv.addItem(AdminGui.item(Material.STAINED_GLASS_PANE, 13, 1, ChatColor.GREEN + getTr("37")));
             p.updateInventory();
         }
-        schedulers = Bukkit.getScheduler().scheduleSyncRepeatingTask(plugin, new Runnable(){
+        schedulers = Bukkit.getScheduler().scheduleSyncRepeatingTask(plugin, new Runnable() {
             int current = 0;
 
             @Override
@@ -295,8 +295,9 @@ public class Arena {
             }
         }
         final ArenaPlayer finalWinner = winner1;
-        schedulers = Bukkit.getScheduler().scheduleSyncRepeatingTask(plugin, new Runnable(){
+        schedulers = Bukkit.getScheduler().scheduleSyncRepeatingTask(plugin, new Runnable() {
             int zenbat = 0;
+
             @Override
             public void run() {
                 Firework f = finalWinner.getWorld().spawn(t.getCuboid().getCenter(), Firework.class);
@@ -334,8 +335,9 @@ public class Arena {
     }
 
     public void minimunReached() {
-        schedulers = Bukkit.getScheduler().scheduleSyncRepeatingTask(plugin, new Runnable(){
+        schedulers = Bukkit.getScheduler().scheduleSyncRepeatingTask(plugin, new Runnable() {
             int a = 60;
+
             @Override
             public void run() {
                 if (maxPlayers == players.size() || a == 0) {
@@ -343,42 +345,45 @@ public class Arena {
                     start();
                     return;
                 } else {
-                    for(ArenaPlayer p : players){
-                         p.getPlayer().setLevel(a);
+                    for (ArenaPlayer p : players) {
+                        p.getPlayer().setLevel(a);
                     }
                     a--;
                 }
-                if(a == 3 || a == 2 || a== 1 ){
-                    for(ArenaPlayer j : players){
+                if (a == 3 || a == 2 || a == 1) {
+                    for (ArenaPlayer j : players) {
                         Player p = j.getPlayer();
                         p.getWorld().playSound(p.getLocation(), Sound.NOTE_STICKS, 10, 1);
-                        ArenaManager.sendTitle(p, 20, 40, 20,ChatColor.YELLOW + Integer.toString( a), "");
+                        ArenaManager.sendTitle(p, 20, 40, 20, ChatColor.YELLOW + Integer.toString(a), "");
                     }
                 }
             }
         }, 0, 20);
     }
-    public void forceStart(){
+
+    public void forceStart() {
         Bukkit.getScheduler().cancelTask(schedulers);
-        schedulers = Bukkit.getScheduler().scheduleSyncRepeatingTask(plugin, new Runnable(){
+        schedulers = Bukkit.getScheduler().scheduleSyncRepeatingTask(plugin, new Runnable() {
             int a = 3;
+
             @Override
             public void run() {
-                if(a == 0){
+                if (a == 0) {
                     Bukkit.getScheduler().cancelTask(schedulers);
                     start();
-                }else{
-                    for(ArenaPlayer j : players){
+                } else {
+                    for (ArenaPlayer j : players) {
                         Player p = j.getPlayer();
                         p.getPlayer().setLevel(a);
                         p.getWorld().playSound(p.getLocation(), Sound.NOTE_STICKS, 10, 1);
-                        ArenaManager.sendTitle(p, 20, 40, 20,ChatColor.YELLOW + Integer.toString( a), "");
+                        ArenaManager.sendTitle(p, 20, 40, 20, ChatColor.YELLOW + Integer.toString(a), "");
                     }
-                   a--; 
+                    a--;
                 }
             }
-            }, 0, 20);
+        }, 0, 20);
     }
+
     public ArenaPlayer getPlayer(int index) {
         return players.get(index);
     }

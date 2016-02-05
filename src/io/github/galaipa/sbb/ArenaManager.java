@@ -114,7 +114,7 @@ public class ArenaManager {
                 if (arena.getPlayers().isEmpty()) {
                     arena.reset();
                 }
-            }else{
+            } else {
                 p.sendMessage(ChatColor.GREEN + "[Build Battle] " + ChatColor.RED + getTr("3"));
                 arena.Broadcast(ChatColor.GREEN + "[Build Battle] " + ChatColor.RED + p.getName() + " " + getTr("4"));
             }
@@ -245,9 +245,9 @@ public class ArenaManager {
             Double x = plugin.getConfig().getDouble("Lobby.X");
             Double y = plugin.getConfig().getDouble("Lobby.Y");
             Double z = plugin.getConfig().getDouble("Lobby.Z");
-           // lobby = new Location(Bukkit.getWorld(w), x, y, z);
+            // lobby = new Location(Bukkit.getWorld(w), x, y, z);
         }
-         //debug("Lobby loaded: " + lobby.toString());
+        //debug("Lobby loaded: " + lobby.toString());
     }
 
     public String getRandomTheme() {
@@ -272,8 +272,8 @@ public class ArenaManager {
         if (Command) {
             plugin.getServer().dispatchCommand(plugin.getServer().getConsoleSender(), (plugin.getConfig().getString("Rewards.Command." + s)).replace("$player$", p.getName()));
         }
-        if(PlayerPoints){
-            PlayerPointsOptional.givePlayerPointsRewards(p.getPlayer(),plugin.getConfig().getInt("Rewards.PlayerPoints." + s));
+        if (PlayerPoints) {
+            PlayerPointsOptional.givePlayerPointsRewards(p.getPlayer(), plugin.getConfig().getInt("Rewards.PlayerPoints." + s));
         }
     }
 
@@ -284,8 +284,8 @@ public class ArenaManager {
         if (Command) {
             plugin.getServer().dispatchCommand(plugin.getServer().getConsoleSender(), (plugin.getConfig().getString("Rewards.Command." + s)).replace("$player$", p.getName()));
         }
-        if(PlayerPoints){
-            PlayerPointsOptional.givePlayerPointsRewards(p.getPlayer(),plugin.getConfig().getInt("Rewards.PlayerPoints." + s));
+        if (PlayerPoints) {
+            PlayerPointsOptional.givePlayerPointsRewards(p.getPlayer(), plugin.getConfig().getInt("Rewards.PlayerPoints." + s));
         }
     }
 }

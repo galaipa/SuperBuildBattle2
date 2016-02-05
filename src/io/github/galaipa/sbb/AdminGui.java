@@ -101,7 +101,7 @@ public class AdminGui implements Listener {
 
     @EventHandler
     public void onInventoryClick2(PlayerInteractEvent event) {
-        if(!event.getPlayer().hasPermission("bb.admin")) return;
+        if (!event.getPlayer().hasPermission("bb.admin")) return;
         if (event.getAction() == Action.RIGHT_CLICK_AIR || event.getAction() == Action.RIGHT_CLICK_BLOCK) {
             Player p = event.getPlayer();
             if (p.getItemInHand().getType() == Material.STAINED_CLAY && p.getItemInHand().hasItemMeta() && p.getItemInHand().getItemMeta().hasDisplayName()) {
@@ -156,7 +156,7 @@ public class AdminGui implements Listener {
                             return;
                         }
                         SetupInventory2(p, 1);
-                    }else if (izena.equalsIgnoreCase(ChatColor.RED + "Abort")) {
+                    } else if (izena.equalsIgnoreCase(ChatColor.RED + "Abort")) {
                         event.setCancelled(true);
                         ArenaManager.admin = false;
                         setup = false;
@@ -228,7 +228,7 @@ public class AdminGui implements Listener {
                         int id = i.getAmount();
                         arenaId = id;
                         AdminGui.adminGui(p);
-                    }else if (izena.equalsIgnoreCase(ChatColor.RED + "Close Menu")) {
+                    } else if (izena.equalsIgnoreCase(ChatColor.RED + "Close Menu")) {
                         ArenaManager.admin = false;
                         p.getInventory().clear();
                     }
@@ -238,12 +238,12 @@ public class AdminGui implements Listener {
                     Arena a = getManager().getArena(event.getPlayer());
                     if (a.inGame) {
                         if (p.getItemInHand().hasItemMeta()) {
-                            if(p.getItemInHand().getItemMeta().hasDisplayName()){
-                                if(p.getItemInHand().getItemMeta().getDisplayName().equalsIgnoreCase(ChatColor.BLUE + "Menu")){
+                            if (p.getItemInHand().getItemMeta().hasDisplayName()) {
+                                if (p.getItemInHand().getItemMeta().getDisplayName().equalsIgnoreCase(ChatColor.BLUE + "Menu")) {
                                     event.getPlayer().openInventory(myInventory);
                                     event.setCancelled(true);
                                 }
-                        }
+                            }
                         }
                     }
                 }
@@ -257,7 +257,7 @@ public class AdminGui implements Listener {
         if (setup) {
             if (region) {
                 Player p = event.getPlayer();
-                if(p.hasPermission("bb.admin")){
+                if (p.hasPermission("bb.admin")) {
                     if (p.getItemInHand() != null && p.getItemInHand().getType() == Material.STAINED_CLAY && p.getItemInHand().hasItemMeta() && p.getItemInHand().getItemMeta().hasDisplayName()) {
                         String izena = p.getItemInHand().getItemMeta().getDisplayName();
                         int id = p.getItemInHand().getAmount();

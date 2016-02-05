@@ -1,7 +1,7 @@
 package io.github.galaipa.sbb;
 
-import static io.github.galaipa.sbb.ArenaManager.debug;
 import org.bukkit.ChatColor;
+import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -15,17 +15,17 @@ import org.bukkit.event.inventory.InventoryCreativeEvent;
 import org.bukkit.event.player.*;
 
 import java.util.ArrayList;
-
-import static io.github.galaipa.sbb.ArenaManager.getManager;
-import static io.github.galaipa.sbb.SuperBuildBattle.getTr;
 import java.util.HashMap;
 import java.util.Map;
-import org.bukkit.GameMode;
+
+import static io.github.galaipa.sbb.ArenaManager.debug;
+import static io.github.galaipa.sbb.ArenaManager.getManager;
+import static io.github.galaipa.sbb.SuperBuildBattle.getTr;
 
 
 public class GameListener implements Listener {
-    SuperBuildBattle plugin = SuperBuildBattle.getInstance();
     public static Map<String, ArenaPlayer> Offline = new HashMap<>();
+    SuperBuildBattle plugin = SuperBuildBattle.getInstance();
 
     @EventHandler(priority = EventPriority.LOW)
     public void onInventoryClick(PlayerInteractEvent event) {
@@ -66,9 +66,9 @@ public class GameListener implements Listener {
                         }
                     }
                 }
-            }else{
-                if(event.getClickedBlock() != null){
-                    if(event.getClickedBlock().getType() == Material.ENDER_CHEST){
+            } else {
+                if (event.getClickedBlock() != null) {
+                    if (event.getClickedBlock().getType() == Material.ENDER_CHEST) {
                         event.setCancelled(true);
                     }
                 }
@@ -90,16 +90,16 @@ public class GameListener implements Listener {
     public void PlayerCommand(PlayerCommandPreprocessEvent event) {
         if (getManager().getArena(event.getPlayer()) != null) {
             Arena a = getManager().getArena(event.getPlayer());
-                Player p = event.getPlayer();
-                ArrayList<String> list = (ArrayList<String>) plugin.getConfig().getStringList("CmdWhitelist");
-                for (String s : list) {
-                    if (event.getMessage().toLowerCase().startsWith("/" + s)) {
-                        return;
-                    }
+            Player p = event.getPlayer();
+            ArrayList<String> list = (ArrayList<String>) plugin.getConfig().getStringList("CmdWhitelist");
+            for (String s : list) {
+                if (event.getMessage().toLowerCase().startsWith("/" + s)) {
+                    return;
                 }
-                event.setCancelled(true);
-                p.sendMessage(ChatColor.GREEN + "[BuildBattle]" + ChatColor.RED + "You can't use command during the game");
             }
+            event.setCancelled(true);
+            p.sendMessage(ChatColor.GREEN + "[BuildBattle]" + ChatColor.RED + "You can't use command during the game");
+        }
     }
 
     @EventHandler
@@ -173,10 +173,10 @@ public class GameListener implements Listener {
                     WorldGuardOptional.WGregionRM(a.getArenaPlayer(e.getPlayer()).getID(), a.getID());
                 }*/
             }
-            Offline.put(p.getName(),j);
+            Offline.put(p.getName(), j);
             a.players.remove(j);
             //Taldea ezabatu
-           // ArenaManager.getManager().removePlayer(e.getPlayer(), true);
+            // ArenaManager.getManager().removePlayer(e.getPlayer(), true);
             if (a.players.isEmpty()) {
                 a.reset();
             }
@@ -186,30 +186,30 @@ public class GameListener implements Listener {
 
     @EventHandler
     public void onJoin(PlayerJoinEvent e) {
-            Player p = e.getPlayer();
-            ArrayList<String> list = (ArrayList<String>) plugin.getConfig().getStringList("OfflinePlayers");
-            if (list.contains(p.getName())) {
-                list.remove(p.getName());
-                plugin.getConfig().set("OfflinePlayers", list);
-                plugin.saveConfig();
-                debug("Player detected: " + p.getName());
-                if(Offline.containsKey(p.getName())){
-                    debug("Player data found");
-                    ArenaPlayer j = Offline.get(p.getName());
-                    p.teleport(j.getPreSpawn());
-                    p.setGameMode(GameMode.SURVIVAL);
-                    j.returnInv(p);
-                }else{
-                    debug("Player data not found");
-                    p.setGameMode(GameMode.SURVIVAL);
-                    p.getInventory().clear();
-                    p.getInventory().setArmorContents(null);
-                  //  p.teleport(ArenaManager.getManager().lobby);
-                }
-               // e.getPlayer().setGameMode(GameMode.SURVIVAL);
-               // e.getPlayer().teleport(ArenaManager.getManager().lobby);
-                // plugin.returnInventory(e.getPlayer());
+        Player p = e.getPlayer();
+        ArrayList<String> list = (ArrayList<String>) plugin.getConfig().getStringList("OfflinePlayers");
+        if (list.contains(p.getName())) {
+            list.remove(p.getName());
+            plugin.getConfig().set("OfflinePlayers", list);
+            plugin.saveConfig();
+            debug("Player detected: " + p.getName());
+            if (Offline.containsKey(p.getName())) {
+                debug("Player data found");
+                ArenaPlayer j = Offline.get(p.getName());
+                p.teleport(j.getPreSpawn());
+                p.setGameMode(GameMode.SURVIVAL);
+                j.returnInv(p);
+            } else {
+                debug("Player data not found");
+                p.setGameMode(GameMode.SURVIVAL);
+                p.getInventory().clear();
+                p.getInventory().setArmorContents(null);
+                //  p.teleport(ArenaManager.getManager().lobby);
             }
+            // e.getPlayer().setGameMode(GameMode.SURVIVAL);
+            // e.getPlayer().teleport(ArenaManager.getManager().lobby);
+            // plugin.returnInventory(e.getPlayer());
+        }
 
     }
 

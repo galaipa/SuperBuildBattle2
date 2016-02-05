@@ -1,10 +1,6 @@
 package io.github.galaipa.sbb;
 
-import org.bukkit.Chunk;
-import org.bukkit.Location;
-import org.bukkit.Material;
-import org.bukkit.WeatherType;
-import org.bukkit.World;
+import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
@@ -67,14 +63,14 @@ public class ArenaPlayer {
         for (Block block : cuboid) {
             block.setType(Material.AIR);
         }
-        for (Chunk chunk : cuboid.getChunks()){
-            for (Entity e : chunk.getEntities()){
-                if(e instanceof Player){
+        for (Chunk chunk : cuboid.getChunks()) {
+            for (Entity e : chunk.getEntities()) {
+                if (e instanceof Player) {
                     return;
-                }else if(cuboid.contains(e.getLocation())){
+                } else if (cuboid.contains(e.getLocation())) {
                     e.remove();
                 }
-            }	
+            }
         }
         setGround(type, data);
     }
@@ -117,11 +113,13 @@ public class ArenaPlayer {
     public String getPlayerString() {
         return p.getName();
     }
+
     public void returnInv() {
         p.getInventory().setContents(inv);
         p.getInventory().setArmorContents(armor);
         p.setLevel(exp);
     }
+
     public void returnInv(Player p1) {
         p1.getInventory().setContents(inv);
         p1.getInventory().setArmorContents(armor);
@@ -131,20 +129,24 @@ public class ArenaPlayer {
     public Boolean checkPlayer(Player p) {
         return player.equals(p);
     }
-    public long getTime(){
+
+    public long getTime() {
         return time;
     }
-    public void setTime(int t){
+
+    public void setTime(int t) {
         player.setPlayerTime((long) t, false);
         time = t;
     }
-    public WeatherType getWeather(){
-        if(weather == null){
+
+    public WeatherType getWeather() {
+        if (weather == null) {
             return WeatherType.CLEAR;
         }
         return weather;
     }
-    public void setWeather(WeatherType t){
+
+    public void setWeather(WeatherType t) {
         player.setPlayerWeather(t);
         weather = t;
     }
