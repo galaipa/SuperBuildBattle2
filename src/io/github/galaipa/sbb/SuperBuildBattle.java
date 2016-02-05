@@ -87,6 +87,7 @@ public class SuperBuildBattle extends JavaPlugin {
             ArenaManager.PlayerPoints = false;
             debug("PlayerPoints: false");
         }
+        ArenaManager.timeBeforeStart = getConfig().getInt("TimeBeforeStart", ArenaManager.timeBeforeStart);
         ArenaManager.Command = getConfig().getBoolean("Rewards.Command.Enabled");
         ArenaManager.debug = getConfig().getBoolean("Debug");
         ArenaManager.WorldGuarda = getServer().getPluginManager().getPlugin("WorldGuard") != null;

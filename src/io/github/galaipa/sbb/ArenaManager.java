@@ -20,6 +20,7 @@ public class ArenaManager {
     public static ArenaManager am = new ArenaManager();
     public static boolean debug;
     public static boolean PlayerPoints, Vault, Command, WorldGuarda;
+    public static int  timeBeforeStart = 45;
     //Location lobby;
     List<Arena> arenas = new ArrayList<>();
     SuperBuildBattle plugin = SuperBuildBattle.getInstance();

@@ -336,8 +336,7 @@ public class Arena {
 
     public void minimunReached() {
         schedulers = Bukkit.getScheduler().scheduleSyncRepeatingTask(plugin, new Runnable() {
-            int a = 60;
-
+            int a = ArenaManager.timeBeforeStart;
             @Override
             public void run() {
                 if (maxPlayers == players.size() || a == 0) {
@@ -365,7 +364,6 @@ public class Arena {
         Bukkit.getScheduler().cancelTask(schedulers);
         schedulers = Bukkit.getScheduler().scheduleSyncRepeatingTask(plugin, new Runnable() {
             int a = 3;
-
             @Override
             public void run() {
                 if (a == 0) {

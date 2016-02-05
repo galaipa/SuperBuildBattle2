@@ -29,18 +29,12 @@ public class GameListener implements Listener {
 
     @EventHandler(priority = EventPriority.LOW)
     public void onInventoryClick(PlayerInteractEvent event) {
-        if (getManager().getArena(event.getPlayer()) != null) {
-            Arena a = getManager().getArena(event.getPlayer());
+        Arena a;
+        if ((a = getManager().getArena(event.getPlayer())) != null) {
             if (a.voting) {
                 if (event.getAction() == Action.RIGHT_CLICK_AIR || event.getAction() == Action.RIGHT_CLICK_BLOCK) {
                     Player p = event.getPlayer();
                     event.setCancelled(true);
-                       /* for(Player b : a.botoa){
-                            if(b == p){
-                                p.sendMessage(ChatColor.RED + getTr("25"));
-                                return;
-                            }
-                        }*/
                     if (a.currentVotedPlayer.getPlayer() == p) {
                         p.sendMessage(ChatColor.RED + getTr("26"));
                     } else if (p.getItemInHand().getType() == Material.STAINED_CLAY) {
@@ -104,8 +98,8 @@ public class GameListener implements Listener {
 
     @EventHandler
     public void CuboidProtection(BlockBreakEvent event) {
-        if (getManager().getArena(event.getPlayer()) != null) {
-            Arena a = getManager().getArena(event.getPlayer());
+        Arena a;
+        if ((a = getManager().getArena(event.getPlayer())) != null) {
             if (a.inGame) {
                 if (!a.getArenaPlayer(event.getPlayer()).getCuboid().contains(event.getBlock()) || a.voting) {
                     event.setCancelled(true);
@@ -116,8 +110,8 @@ public class GameListener implements Listener {
 
     @EventHandler
     public void CuboidProtection2(BlockPlaceEvent event) {
-        if (getManager().getArena(event.getPlayer()) != null) {
-            Arena a = getManager().getArena(event.getPlayer());
+        Arena a;
+        if ((a = getManager().getArena(event.getPlayer())) != null) {
             if (a.inGame) {
                 if (!a.getArenaPlayer(event.getPlayer()).getCuboid().contains(event.getBlock())) {
                     event.setCancelled(true);
@@ -128,8 +122,8 @@ public class GameListener implements Listener {
 
     @EventHandler
     public void onPlayerBucketEmpty(PlayerBucketEmptyEvent event) {
-        if (getManager().getArena(event.getPlayer()) != null) {
-            Arena a = getManager().getArena(event.getPlayer());
+        Arena a;
+        if ((a = getManager().getArena(event.getPlayer())) != null) {
             if (a.inGame) {
                 Location l = event.getBlockClicked().getLocation();
                 l.setY(l.getY() + 1);
@@ -160,8 +154,8 @@ public class GameListener implements Listener {
     @EventHandler
     public void onLeave(PlayerQuitEvent e) {
         Player p = e.getPlayer();
-        if (getManager().getArena(p) != null) {
-            Arena a = getManager().getArena(p);
+        Arena a;
+        if ((a = getManager().getArena(p)) != null) {
             ArenaPlayer j = a.getArenaPlayer(p);
             ArrayList<String> list = (ArrayList<String>) plugin.getConfig().getStringList("OfflinePlayers");
             list.add(p.getName());
