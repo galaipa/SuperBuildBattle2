@@ -1,5 +1,6 @@
 package io.github.galaipa.sbb;
 
+import com.sk89q.worldedit.bukkit.WorldEditPlugin;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -49,6 +50,12 @@ public class SuperBuildBattle extends JavaPlugin {
         return true;
     }
 
+
+
+    public WorldEditPlugin getWorldEdit(){
+        return  (WorldEditPlugin) Bukkit.getServer().getPluginManager().getPlugin("WorldEdit");
+    }
+
     @Override
     public void onEnable() {
         getConfig().options().copyDefaults(true);
@@ -57,7 +64,7 @@ public class SuperBuildBattle extends JavaPlugin {
 
         getServer().getPluginManager().registerEvents(new SignListener(this), this);
         getServer().getPluginManager().registerEvents(new GameListener(), this);
-        getServer().getPluginManager().registerEvents(new AdminGui(), this);
+        getServer().getPluginManager().registerEvents(new AdminGui(this), this);
         getServer().getPluginManager().registerEvents(new InGameGui(), this);
         loadTranslations();
         if (Bukkit.getPluginManager().getPlugin("PlayerPoints") != null && getConfig().getBoolean("Rewards.PlayerPoints.Enabled")) {
@@ -228,6 +235,10 @@ public class SuperBuildBattle extends JavaPlugin {
                 }
                 getConfig().set("ItemBlackList", list);
                 saveConfig();
+                return true;
+            } else if(args[0].equalsIgnoreCase("saveGlobalLobby")){
+                ArenaManager.getManager().saveGlobalLobby(((Player) sender).getLocation());
+                sender.sendMessage("Fatto");
                 return true;
             } else {
                 sender.sendMessage(ChatColor.RED + "Invalid command");

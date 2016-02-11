@@ -7,6 +7,7 @@ import org.bukkit.entity.Firework;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.meta.FireworkMeta;
+import org.bukkit.scoreboard.ScoreboardManager;
 
 import java.util.*;
 
@@ -24,11 +25,10 @@ public class Arena {
     Boolean inGame = false, voting = false;
     String theme;
     Spigboard SpigBoard;
-    String timer = null;
     ArenaPlayer currentVotedPlayer;
-    SuperBuildBattle plugin = SuperBuildBattle.getInstance();
     int schedulers;
     private volatile boolean running = false;
+    SuperBuildBattle plugin = SuperBuildBattle.getInstance();
 
     public Arena(int id, int minPlayers, int maxPlayers, int time, int votingTime, Location lobby, Cuboid[] cuboid) {
         this.id = id;
@@ -38,6 +38,10 @@ public class Arena {
         this.votingtime = votingTime;
         this.lobby = lobby;
         this.cuboid = cuboid;
+    }
+
+    public Location getLobby(){
+        return lobby;
     }
 
     public int getID() {
@@ -144,6 +148,7 @@ public class Arena {
                 }
                 if (minutes == 0 && seconds == 0) {
                     Bukkit.getScheduler().cancelTask(schedulers);
+                    schedulers = -1;
                     voting = true;
                     voting();
                 } else if (seconds == 0) {
@@ -210,6 +215,7 @@ public class Arena {
                 botoa.clear();
                 if (current >= players.size()) {
                     Bukkit.getScheduler().cancelTask(schedulers);
+                    schedulers = -1;
                     winner();
                 } else {
                     currentVotedPlayer = getPlayer(current);
@@ -245,6 +251,40 @@ public class Arena {
 
             }
         }, 0, 20 * votingtime);
+    }
+
+    public void removePlayer(Player p, boolean bo){
+        final ArenaPlayer j2 = getArenaPlayer(p);
+        if (inGame) {
+            j2.resetArenas();
+        }
+        p.setGameMode(GameMode.SURVIVAL);
+        Location globalLobby = ArenaManager.getManager().getGlobalLobby();
+        if(globalLobby != null && globalLobby.getWorld() != null){
+            p.teleport(globalLobby);
+        }else{
+            p.teleport(j2.getPreSpawn());
+        }
+        ScoreboardManager manager = Bukkit.getScoreboardManager();
+        p.setScoreboard(manager.getNewScoreboard());
+        p.resetPlayerWeather();
+        p.resetPlayerTime();
+        j2.returnInv();
+        if (bo) {
+            getPlayers().remove(j2);
+            if(getPlayers().size() < minPlayers){
+                if(running){
+                    reset();
+                }else if(schedulers != -1){
+                    Broadcast(ChatColor.GREEN + "[Build Battle] " + ChatColor.RED + "Countdown stopped! " + p.getName() + " left!");
+                    Bukkit.getScheduler().cancelTask(schedulers);
+                    schedulers = -1;
+                }
+            }
+        } else {
+            p.sendMessage(ChatColor.GREEN + "[Build Battle] " + ChatColor.RED + getTr("3"));
+            Broadcast(ChatColor.GREEN + "[Build Battle] " + ChatColor.RED + p.getName() + " " + getTr("4"));
+        }
     }
 
     public void winner() {
@@ -308,6 +348,7 @@ public class Arena {
                 zenbat++;
                 if (zenbat == 10) {
                     Bukkit.getScheduler().cancelTask(schedulers);
+                    schedulers = -1;
                     reset();
                 }
             }
@@ -316,6 +357,7 @@ public class Arena {
 
     public void reset() {
         Bukkit.getScheduler().cancelTask(schedulers);
+        schedulers = -1;
         running = false;
         Iterator<ArenaPlayer> it = players.iterator();
         while (it.hasNext()) {
@@ -341,6 +383,7 @@ public class Arena {
             public void run() {
                 if (maxPlayers == players.size() || a == 0) {
                     Bukkit.getScheduler().cancelTask(schedulers);
+                    schedulers = -1;
                     start();
                     return;
                 } else {
@@ -362,12 +405,14 @@ public class Arena {
 
     public void forceStart() {
         Bukkit.getScheduler().cancelTask(schedulers);
+        schedulers = -1;
         schedulers = Bukkit.getScheduler().scheduleSyncRepeatingTask(plugin, new Runnable() {
             int a = 3;
             @Override
             public void run() {
                 if (a == 0) {
                     Bukkit.getScheduler().cancelTask(schedulers);
+                    schedulers = -1;
                     start();
                 } else {
                     for (ArenaPlayer j : players) {

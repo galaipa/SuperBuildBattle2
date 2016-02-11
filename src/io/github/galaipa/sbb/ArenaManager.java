@@ -6,6 +6,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.scoreboard.ScoreboardManager;
 
@@ -24,6 +25,8 @@ public class ArenaManager {
     //Location lobby;
     List<Arena> arenas = new ArrayList<>();
     SuperBuildBattle plugin = SuperBuildBattle.getInstance();
+    private Location globalLobby;
+
 
     public static ArenaManager getManager() {
         return am;
@@ -84,9 +87,12 @@ public class ArenaManager {
                     a.Broadcast(ChatColor.YELLOW + "[Build Battle] " + ChatColor.GREEN + p.getName() + " " + getTr("10"));
                     ArenaPlayer j = new ArenaPlayer(p, a.getID(), l);
                     a.getPlayers().add(j);
+                    p.teleport(a.getLobby());
                     //  p.sendMessage(ChatColor.YELLOW + "[Build Battle] " +ChatColor.GREEN +"You joined arena " + a.getID() + "/" + arenas.size());
                     p.sendMessage(ChatColor.YELLOW + "[Build Battle] " + ChatColor.GREEN + getTr("39").replace("{1}", j.getID() + "/" + a.maxPlayers).replace("{2}", a.getID() + "/" + arenas.size()));
                     if (a.players.size() == a.minPlayers) {
+                        a.Broadcast(ChatColor.YELLOW + "[Build Battle] " + ChatColor.GREEN + "Countdown started!");
+                        System.out.println("Minimum players = " + a.players.size() + " " + a.minPlayers);
                         a.minimunReached();
                     }
                     return;
@@ -96,29 +102,14 @@ public class ArenaManager {
         p.sendMessage(ChatColor.YELLOW + "[Build Battle] " + ChatColor.RED + "All arenas are full or inGame");
     }
 
-    public void removePlayer(final Player p, Boolean bo) {
+    public Location getGlobalLobby(){
+        return globalLobby;
+    }
+
+    public void removePlayer(final Player p, boolean bo) {
         if (getArena(p) != null) {
             Arena arena = getArena(p);
-            final ArenaPlayer j2 = arena.getArenaPlayer(p);
-            if (arena.inGame) {
-                j2.resetArenas();
-            }
-            p.setGameMode(GameMode.SURVIVAL);
-            p.teleport(j2.getPreSpawn());
-            ScoreboardManager manager = Bukkit.getScoreboardManager();
-            p.setScoreboard(manager.getNewScoreboard());
-            p.resetPlayerWeather();
-            p.resetPlayerTime();
-            j2.returnInv();
-            if (bo) {
-                arena.getPlayers().remove(j2);
-                if (arena.getPlayers().isEmpty()) {
-                    arena.reset();
-                }
-            } else {
-                p.sendMessage(ChatColor.GREEN + "[Build Battle] " + ChatColor.RED + getTr("3"));
-                arena.Broadcast(ChatColor.GREEN + "[Build Battle] " + ChatColor.RED + p.getName() + " " + getTr("4"));
-            }
+            arena.removePlayer(p, bo);
         } else {
             p.sendMessage(ChatColor.GREEN + "[Build Battle] " + ChatColor.RED + getTr("5"));
         }
@@ -135,7 +126,37 @@ public class ArenaManager {
         return null;
     }
 
+    public void loadGlobalLobby(){
+        try{
+            if(plugin.getConfig().contains("GlobalLobby")){
+                String world = plugin.getConfig().getString("GlobalLobby.world");
+                double x = plugin.getConfig().getDouble("GlobalLobby.x");
+                double y = plugin.getConfig().getDouble("GlobalLobby.y");
+                double z = plugin.getConfig().getDouble("GlobalLobby.z");
+                this.globalLobby = new Location(Bukkit.getWorld(world), x, y, z);
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    public void saveGlobalLobby(Location location){
+        try{
+            FileConfiguration conf = plugin.getConfig();
+            conf.set("GlobalLobby.world", location.getWorld().getName());
+            conf.set("GlobalLobby.x", location.getX());
+            conf.set("GlobalLobby.y", location.getY());
+            conf.set("GlobalLobby.z", location.getZ());
+            plugin.saveConfig();
+            this.globalLobby = location;
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
     public void loadArenas() {
+        loadGlobalLobby();
+
         arenas.clear();
         int id = 1;
         do {

@@ -8,6 +8,7 @@ import org.bukkit.WeatherType;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
@@ -114,13 +115,13 @@ public class InGameGui implements Listener {
         }
     }
 
-    @EventHandler
+    @EventHandler()
     public void userGuiUse(InventoryClickEvent event) {
         if (getManager().getArena((Player) event.getWhoClicked()) != null) {
             Arena a = getManager().getArena((Player) event.getWhoClicked());
             if (a.inGame) {
                 Inventory inventory = event.getInventory();
-                if (inventory.getName().equals(myInventory.getName()) && event.getCurrentItem() != null) {
+                if (inventory.getName().equalsIgnoreCase(myInventory.getName()) && event.getCurrentItem() != null) {
                     ItemStack clicked = event.getCurrentItem();
                     Player player = (Player) event.getWhoClicked();
                     ArenaPlayer t = a.getArenaPlayer(player);
