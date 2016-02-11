@@ -4,7 +4,7 @@ version: 8.7.1
 author: Galaipa 
 website: https://www.spigotmc.org/resources/super-build-battle.8775/
 description: BuildBattle minigame plugin
-softdepend: [WorldEdit,WorldGuard,Vault,PlayerPoints,Multiverse-Core]
+softdepend: [WorldEdit,WorldGuard,Vault,PlayerPoints,Multiverse-Core, ccommander]
 commands:
   buildbattle:
     description: BuildBattle main command

@@ -374,6 +374,7 @@ public class Arena {
         botoa.clear();
         debug("Reset OK");
         ArenaManager.getManager().loadArenas();
+        Ccommander.resetArena(plugin, this.id);
     }
 
     public void minimunReached() {
