@@ -1,6 +1,7 @@
 package io.github.galaipa.sbb;
 
 
+import com.sk89q.worldedit.bukkit.selections.Selection;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -24,8 +25,8 @@ import static io.github.galaipa.sbb.InGameGui.myInventory;
 
 public class AdminGui implements Listener {
     public static int arenaId;
-    public final Map<Integer, Location> location1 = new HashMap<>();
-    public final Map<Integer, Location> location2 = new HashMap<>();
+    //public final Map<Integer, Location> location1 = new HashMap<>();
+    //public final Map<Integer, Location> location2 = new HashMap<>();
     ArrayList<Cuboid> cuboids = new ArrayList<>();
     private int time = 1;
     private int timeVote = 1;
@@ -34,7 +35,11 @@ public class AdminGui implements Listener {
     private Location l;
     private boolean region = false;
     private boolean setup = false;
+    private SuperBuildBattle instance;
 
+    public AdminGui(SuperBuildBattle instance){
+        this.instance = instance;
+    }
 
     public static ItemStack item(Material material, int id, int amount, String name) {
         ItemStack b = new ItemStack(material, amount, (short) id);
@@ -91,24 +96,25 @@ public class AdminGui implements Listener {
 
     public void SetupInventory2(Player p, int id) {
         region = true;
+        setup = true;
         Inventory inv = p.getInventory();
         inv.clear();
-        inv.addItem(item(Material.STAINED_CLAY, 10, id, ChatColor.GREEN + "Point A"));
-        inv.addItem(item(Material.STAINED_CLAY, 11, id, ChatColor.GREEN + "Point B"));
+        p.sendMessage(ChatColor.GREEN + "[Build Battle] " + ChatColor.RED + " Select a WorldEdit region with //pos1 and //pos2 or //wand, then right click Next Arena to setup next arena region!");
+        //inv.addItem(item(Material.STAINED_CLAY, 10, id, ChatColor.GREEN + "Point A"));
+        //inv.addItem(item(Material.STAINED_CLAY, 11, id, ChatColor.GREEN + "Point B"));
         inv.addItem(item(Material.STAINED_CLAY, 5, id, ChatColor.GREEN + "Next arena"));
         p.updateInventory();
     }
 
     @EventHandler
     public void onInventoryClick2(PlayerInteractEvent event) {
-        if (!event.getPlayer().hasPermission("bb.admin")) return;
         if (event.getAction() == Action.RIGHT_CLICK_AIR || event.getAction() == Action.RIGHT_CLICK_BLOCK) {
             Player p = event.getPlayer();
             if (p.getItemInHand().getType() == Material.STAINED_CLAY && p.getItemInHand().hasItemMeta() && p.getItemInHand().getItemMeta().hasDisplayName()) {
                 String izena = p.getItemInHand().getItemMeta().getDisplayName();
                 ItemStack i = p.getItemInHand();
                 Inventory inve = p.getInventory();
-                if (setup) {
+                if (setup && event.getPlayer().hasPermission("bb.admin")) {
                     if (izena.equalsIgnoreCase(ChatColor.GREEN + "Set building time (Minutes)")) {
                         event.setCancelled(true);
                         time = i.getAmount() + 1;
@@ -166,17 +172,14 @@ public class AdminGui implements Listener {
                         timeVote = 1;
                         p.getInventory().clear();
                         p.sendMessage(ChatColor.YELLOW + "[Build Battle] " + ChatColor.RED + "New arena aborted");
-                    } else if (event.getAction() == Action.RIGHT_CLICK_AIR && izena.equalsIgnoreCase(ChatColor.GREEN + "Point A") || event.getAction() == Action.RIGHT_CLICK_AIR && izena.equalsIgnoreCase(ChatColor.GREEN + "Point B")) {
-                        event.setCancelled(true);
-                        p.sendMessage(ChatColor.YELLOW + "[Build Battle] " + ChatColor.GREEN + "Select the two points placing the blocks");
-                    } else if (izena.equalsIgnoreCase(ChatColor.GREEN + "Next arena")) {
+                    }else if (izena.equalsIgnoreCase(ChatColor.GREEN + "Next arena")) {
                         int id = p.getItemInHand().getAmount();
-                        if (location1.get(id) == null || location2.get(id) == null) {
-                            p.sendMessage(ChatColor.YELLOW + "[Build Battle] " + ChatColor.RED + "Points missing");
+                        Selection sel = instance.getWorldEdit().getSelection(p);
+                        if(sel == null || sel.getMaximumPoint() == null || sel.getMinimumPoint() == null){
+                            p.sendMessage(ChatColor.YELLOW + "[Build Battle] " + ChatColor.RED + "Select a worldguard region first!!");
                             return;
-                        } else {
-                            cuboids.add(new Cuboid(location1.get(id), location2.get(id)));
                         }
+                        cuboids.add(new Cuboid(sel.getMinimumPoint(), sel.getMaximumPoint()));
                         if (id != players2) {
                             SetupInventory2(p, id + 1);
                         } else {
@@ -185,10 +188,9 @@ public class AdminGui implements Listener {
                             p.getInventory().clear();
                             setup = false;
                             region = false;
-                            // plugin.returnInventory(p);
                         }
                     }
-                } else if (ArenaManager.admin) {
+                } else if (ArenaManager.admin && event.getPlayer().hasPermission("bb.admin")) {
                     if (izena.equalsIgnoreCase(ChatColor.GREEN + "Setup arena")) {
                         p.getInventory().clear();
                         SetupInventory(p);
@@ -244,33 +246,6 @@ public class AdminGui implements Listener {
                                     event.setCancelled(true);
                                 }
                             }
-                        }
-                    }
-                }
-            }
-        }
-    }
-
-
-    @EventHandler
-    public void onBlockPlace(BlockPlaceEvent event) {
-        if (setup) {
-            if (region) {
-                Player p = event.getPlayer();
-                if (p.hasPermission("bb.admin")) {
-                    if (p.getItemInHand() != null && p.getItemInHand().getType() == Material.STAINED_CLAY && p.getItemInHand().hasItemMeta() && p.getItemInHand().getItemMeta().hasDisplayName()) {
-                        String izena = p.getItemInHand().getItemMeta().getDisplayName();
-                        int id = p.getItemInHand().getAmount();
-                        if (izena.equalsIgnoreCase(ChatColor.GREEN + "Point A")) {
-                            event.setCancelled(true);
-                            Location l1 = event.getBlock().getLocation();
-                            location1.put(id, l1);
-                            p.sendMessage(ChatColor.YELLOW + "[Build Battle] " + ChatColor.GREEN + "Point A set to " + l1);
-                        } else if (izena.equalsIgnoreCase(ChatColor.GREEN + "Point B")) {
-                            event.setCancelled(true);
-                            Location l2 = event.getBlock().getLocation();
-                            location2.put(id, l2);
-                            p.sendMessage(ChatColor.YELLOW + "[Build Battle] " + ChatColor.GREEN + "Point B set to " + l2);
                         }
                     }
                 }
