@@ -1,7 +1,5 @@
 package io.github.galaipa.sbb;
 
-
-import com.sk89q.worldedit.bukkit.selections.Selection;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -25,8 +23,8 @@ import static io.github.galaipa.sbb.InGameGui.myInventory;
 
 public class AdminGui implements Listener {
     public static int arenaId;
-    //public final Map<Integer, Location> location1 = new HashMap<>();
-    //public final Map<Integer, Location> location2 = new HashMap<>();
+    public final Map<Integer, Location> location1 = new HashMap<>();
+    public final Map<Integer, Location> location2 = new HashMap<>();
     ArrayList<Cuboid> cuboids = new ArrayList<>();
     private int time = 1;
     private int timeVote = 1;
@@ -99,9 +97,9 @@ public class AdminGui implements Listener {
         setup = true;
         Inventory inv = p.getInventory();
         inv.clear();
-        p.sendMessage(ChatColor.GREEN + "[Build Battle] " + ChatColor.RED + " Select a WorldEdit region with //pos1 and //pos2 or //wand, then right click Next Arena to setup next arena region!");
-        //inv.addItem(item(Material.STAINED_CLAY, 10, id, ChatColor.GREEN + "Point A"));
-        //inv.addItem(item(Material.STAINED_CLAY, 11, id, ChatColor.GREEN + "Point B"));
+        //p.sendMessage(ChatColor.GREEN + "[Build Battle] " + ChatColor.RED + " Select a WorldEdit region with //pos1 and //pos2 or //wand, then right click Next Arena to setup next arena region!");
+        inv.addItem(item(Material.STAINED_CLAY, 10, id, ChatColor.GREEN + "Point A"));
+        inv.addItem(item(Material.STAINED_CLAY, 11, id, ChatColor.GREEN + "Point B"));
         inv.addItem(item(Material.STAINED_CLAY, 5, id, ChatColor.GREEN + "Next arena"));
         p.updateInventory();
     }
@@ -174,12 +172,11 @@ public class AdminGui implements Listener {
                         p.sendMessage(ChatColor.YELLOW + "[Build Battle] " + ChatColor.RED + "New arena aborted");
                     }else if (izena.equalsIgnoreCase(ChatColor.GREEN + "Next arena")) {
                         int id = p.getItemInHand().getAmount();
-                        Selection sel = instance.getWorldEdit().getSelection(p);
-                        if(sel == null || sel.getMaximumPoint() == null || sel.getMinimumPoint() == null){
-                            p.sendMessage(ChatColor.YELLOW + "[Build Battle] " + ChatColor.RED + "Select a worldguard region first!!");
-                            return;
+                        if (location1.get(id) == null || location2.get(id) == null) {
+                            p.sendMessage(ChatColor.YELLOW + "[Build Battle] " + ChatColor.RED + "Points missing");
+                        } else {
+                            cuboids.add(new Cuboid(location1.get(id), location2.get(id)));
                         }
-                        cuboids.add(new Cuboid(sel.getMinimumPoint(), sel.getMaximumPoint()));
                         if (id != players2) {
                             SetupInventory2(p, id + 1);
                         } else {
@@ -227,8 +224,7 @@ public class AdminGui implements Listener {
                         p.sendMessage(ChatColor.YELLOW + "[Build Battle] " + ChatColor.GREEN + "Use the setup inventory to set all the game parametres. Use it with out opening the inventory");
                         arenaId = id;
                     } else if (izena.startsWith(ChatColor.GREEN + "Arena")) {
-                        int id = i.getAmount();
-                        arenaId = id;
+                        arenaId = i.getAmount();
                         AdminGui.adminGui(p);
                     } else if (izena.equalsIgnoreCase(ChatColor.RED + "Close Menu")) {
                         ArenaManager.admin = false;
