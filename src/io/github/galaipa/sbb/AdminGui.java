@@ -7,7 +7,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
-import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
@@ -31,7 +30,6 @@ public class AdminGui implements Listener {
     private int players1 = 1;
     private int players2 = 1;
     private Location l;
-    private boolean region = false;
     private boolean setup = false;
     private SuperBuildBattle instance;
 
@@ -93,7 +91,6 @@ public class AdminGui implements Listener {
     }
 
     public void SetupInventory2(Player p, int id) {
-        region = true;
         setup = true;
         Inventory inv = p.getInventory();
         inv.clear();
@@ -162,12 +159,7 @@ public class AdminGui implements Listener {
                         SetupInventory2(p, 1);
                     } else if (izena.equalsIgnoreCase(ChatColor.RED + "Abort")) {
                         event.setCancelled(true);
-                        ArenaManager.admin = false;
-                        setup = false;
-                        time = 1;
-                        players1 = 1;
-                        players2 = 1;
-                        timeVote = 1;
+                        resetSetup();
                         p.getInventory().clear();
                         p.sendMessage(ChatColor.YELLOW + "[Build Battle] " + ChatColor.RED + "New arena aborted");
                     }else if (izena.equalsIgnoreCase(ChatColor.GREEN + "Next arena")) {
@@ -183,8 +175,7 @@ public class AdminGui implements Listener {
                             ArenaManager.getManager().createArena(arenaId, players1, players2, time, timeVote, l, cuboids);
                             p.sendMessage(ChatColor.YELLOW + "[Build Battle] " + ChatColor.GREEN + "You finished setting up the game. Now you can start having fun.");
                             p.getInventory().clear();
-                            setup = false;
-                            region = false;
+                            resetSetup();
                         }
                     }
                 } else if (ArenaManager.admin && event.getPlayer().hasPermission("bb.admin")) {
@@ -247,6 +238,17 @@ public class AdminGui implements Listener {
                 }
             }
         }
+    }
+    public void resetSetup(){
+        ArenaManager.admin = false;
+        setup = false;
+        time = 1;
+        players1 = 1;
+        players2 = 1;
+        timeVote = 1;
+        cuboids.clear();
+        location1.clear();
+        location2.clear();
     }
 }
 
