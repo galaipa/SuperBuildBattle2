@@ -19,6 +19,7 @@ import java.util.Map;
 
 import static io.github.galaipa.sbb.ArenaManager.getManager;
 import static io.github.galaipa.sbb.InGameGui.myInventory;
+import org.bukkit.event.block.BlockPlaceEvent;
 
 public class AdminGui implements Listener {
     public static int arenaId;
@@ -30,7 +31,7 @@ public class AdminGui implements Listener {
     private int players1 = 1;
     private int players2 = 1;
     private Location l;
-    private boolean setup = false;
+    private boolean setup = false,region = false;
     private SuperBuildBattle instance;
 
     public AdminGui(SuperBuildBattle instance){
@@ -92,6 +93,7 @@ public class AdminGui implements Listener {
 
     public void SetupInventory2(Player p, int id) {
         setup = true;
+        region = true;
         Inventory inv = p.getInventory();
         inv.clear();
         //p.sendMessage(ChatColor.GREEN + "[Build Battle] " + ChatColor.RED + " Select a WorldEdit region with //pos1 and //pos2 or //wand, then right click Next Arena to setup next arena region!");
@@ -168,14 +170,14 @@ public class AdminGui implements Listener {
                             p.sendMessage(ChatColor.YELLOW + "[Build Battle] " + ChatColor.RED + "Points missing");
                         } else {
                             cuboids.add(new Cuboid(location1.get(id), location2.get(id)));
-                        }
-                        if (id != players2) {
-                            SetupInventory2(p, id + 1);
-                        } else {
-                            ArenaManager.getManager().createArena(arenaId, players1, players2, time, timeVote, l, cuboids);
-                            p.sendMessage(ChatColor.YELLOW + "[Build Battle] " + ChatColor.GREEN + "You finished setting up the game. Now you can start having fun.");
-                            p.getInventory().clear();
-                            resetSetup();
+                            if (id != players2) {
+                                SetupInventory2(p, id + 1);
+                            } else {
+                                ArenaManager.getManager().createArena(arenaId, players1, players2, time, timeVote, l, cuboids);
+                                p.sendMessage(ChatColor.YELLOW + "[Build Battle] " + ChatColor.GREEN + "You finished setting up the game. Now you can start having fun.");
+                                p.getInventory().clear();
+                                resetSetup();
+                            }
                         }
                     }
                 } else if (ArenaManager.admin && event.getPlayer().hasPermission("bb.admin")) {
@@ -242,6 +244,7 @@ public class AdminGui implements Listener {
     public void resetSetup(){
         ArenaManager.admin = false;
         setup = false;
+        region = false;
         time = 1;
         players1 = 1;
         players2 = 1;
@@ -250,6 +253,29 @@ public class AdminGui implements Listener {
         location1.clear();
         location2.clear();
     }
+    @EventHandler
+    public void onBlockPlace(BlockPlaceEvent event) {
+            if (region && setup) {
+                Player p = event.getPlayer();
+                if(p.hasPermission("bb.admin")){
+                    if (p.getItemInHand() != null && p.getItemInHand().getType() == Material.STAINED_CLAY && p.getItemInHand().hasItemMeta() && p.getItemInHand().getItemMeta().hasDisplayName()) {
+                        String izena = p.getItemInHand().getItemMeta().getDisplayName();
+                        int id = p.getItemInHand().getAmount();
+                        if (izena.equalsIgnoreCase(ChatColor.GREEN + "Point A")) {
+                            event.setCancelled(true);
+                            Location l1 = event.getBlock().getLocation();
+                            location1.put(id, l1);
+                            p.sendMessage(ChatColor.YELLOW + "[Build Battle] " + ChatColor.GREEN + "Point A set to " + l1);
+                        } else if (izena.equalsIgnoreCase(ChatColor.GREEN + "Point B")) {
+                            event.setCancelled(true);
+                            Location l2 = event.getBlock().getLocation();
+                            location2.put(id, l2);
+                            p.sendMessage(ChatColor.YELLOW + "[Build Battle] " + ChatColor.GREEN + "Point B set to " + l2);
+                        }
+                    }
+                }
+            }
+        }
 }
 
 
