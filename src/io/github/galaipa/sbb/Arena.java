@@ -113,7 +113,7 @@ public class Arena {
                 @Override
                 public void run() {
                     p.setGameMode(GameMode.CREATIVE);
-                    p.getWorld().playSound(p.getLocation(), Sound.NOTE_PLING, 10, 1);
+                    p.getWorld().playSound(p.getLocation(), Sound.UI_BUTTON_CLICK, 10, 1);
                     InGameGui.giveUserGui(p);
                     InGameGui.userGui();
                     if (plugin.getConfig().getBoolean("StartCommand.Enabled")) {
@@ -225,7 +225,7 @@ public class Arena {
                         p.setPlayerTime(currentVotedPlayer.getTime(), false); // Set plot time
                         p.setPlayerWeather(currentVotedPlayer.getWeather()); // Set plot wheater
                         sendTitleAll(20, 40, 20, currentVotedPlayer.getPlayerString(), "");
-                        p.getWorld().playSound(p.getLocation(), Sound.NOTE_PLING, 10, 1);
+                        p.getWorld().playSound(p.getLocation(), Sound.UI_BUTTON_CLICK, 10, 1);
                     }
                     String scoreboardstring = ChatColor.YELLOW + currentVotedPlayer.getPlayerString();
                     SpigboardEntry score = SpigBoard.getEntry("taldeakideak2");
@@ -396,7 +396,7 @@ public class Arena {
                 if (a == 3 || a == 2 || a == 1) {
                     for (ArenaPlayer j : players) {
                         Player p = j.getPlayer();
-                        p.getWorld().playSound(p.getLocation(), Sound.NOTE_STICKS, 10, 1);
+                        p.getWorld().playSound(p.getLocation(), Sound.UI_BUTTON_CLICK, 10, 1);
                         ArenaManager.sendTitle(p, 20, 40, 20, ChatColor.YELLOW + Integer.toString(a), "");
                     }
                 }
@@ -419,7 +419,7 @@ public class Arena {
                     for (ArenaPlayer j : players) {
                         Player p = j.getPlayer();
                         p.getPlayer().setLevel(a);
-                        p.getWorld().playSound(p.getLocation(), Sound.NOTE_STICKS, 10, 1);
+                        p.getWorld().playSound(p.getLocation(), Sound.UI_BUTTON_CLICK, 10, 1);
                         ArenaManager.sendTitle(p, 20, 40, 20, ChatColor.YELLOW + Integer.toString(a), "");
                     }
                     a--;
