@@ -23,6 +23,7 @@ public class ArenaPlayer {
     private int exp;
     private long time;
     private WeatherType weather;
+    private GameMode gamemode;
 
     public ArenaPlayer(Player p2, int arenaID, Location l) {
         p = p2;
@@ -36,6 +37,7 @@ public class ArenaPlayer {
         startLoc = l;
         exp = p.getLevel();
         time = 6000;
+        gamemode = p.getGameMode();
     }
 
     public int getArenaID() {
@@ -117,12 +119,14 @@ public class ArenaPlayer {
         p.getInventory().setContents(inv);
         p.getInventory().setArmorContents(armor);
         p.setLevel(exp);
+        p.setGameMode(gamemode);
     }
 
     public void returnInv(Player p1) {
         p1.getInventory().setContents(inv);
         p1.getInventory().setArmorContents(armor);
         p1.setLevel(exp);
+        p1.setGameMode(gamemode);
     }
 
     public Boolean checkPlayer(Player p) {
