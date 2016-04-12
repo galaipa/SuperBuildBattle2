@@ -73,6 +73,7 @@ public class SuperBuildBattle extends JavaPlugin {
         } else {
             ArenaManager.PlayerPoints = false;
         }
+        ArenaManager.Sounds = getConfig().getBoolean("Sounds");
         if ((getConfig().getBoolean("Rewards.Vault.Enabled"))) {
             if (!setupEconomy()) {
                 ArenaManager.Vault = false;

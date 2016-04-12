@@ -35,7 +35,6 @@ public class ArenaPlayer {
         p.getInventory().clear();
         startLoc = l;
         exp = p.getLevel();
-        player = p2;
         time = 6000;
     }
 

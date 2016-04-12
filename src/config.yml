@@ -3,6 +3,7 @@ Metrics: true
 Language: en
 Debug: false
 TimeBeforeStart: 45
+Sounds: true
 CmdWhitelist:
     - bb
     - buildbattle

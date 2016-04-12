@@ -3,3 +3,6 @@ bin
 .idea
 out/
 *.iml
+/nbproject/private/
+/build/
+/dist/

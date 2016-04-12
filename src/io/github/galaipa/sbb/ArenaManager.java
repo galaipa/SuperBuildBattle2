@@ -18,7 +18,7 @@ public class ArenaManager {
     public static Boolean admin = false;
     public static ArenaManager am = new ArenaManager();
     public static boolean debug;
-    public static boolean PlayerPoints, Vault, Command, WorldGuarda;
+    public static boolean PlayerPoints, Vault, Command, WorldGuarda,Sounds;
     public static int  timeBeforeStart = 45;
     //Location lobby;
     List<Arena> arenas = new ArrayList<>();
@@ -116,7 +116,7 @@ public class ArenaManager {
     public Arena getArena(Player p) {
         for (Arena a : arenas) {
             for (ArenaPlayer j : a.players) {
-                if (j.getPlayer() == p) {
+                if (j.getPlayer().equals(p)) {
                     return a;
                 }
             }
@@ -272,8 +272,12 @@ public class ArenaManager {
 
     public String getRandomTheme() {
         List<String> themes = plugin.getConfig().getStringList("Themes");
-        Random random = new Random();
-        return themes.get(random.nextInt(themes.size()));
+        if(themes.isEmpty()){
+            return "Missing.Contact Admin";
+        }else{
+            Random random = new Random();
+            return themes.get(random.nextInt(themes.size()));
+        }
     }
 
     //REWARDS

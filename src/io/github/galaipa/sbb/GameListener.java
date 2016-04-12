@@ -30,10 +30,10 @@ public class GameListener implements Listener {
     @EventHandler(priority = EventPriority.LOW)
     public void onInventoryClick(PlayerInteractEvent event) {
         Arena a;
-        if ((a = getManager().getArena(event.getPlayer())) != null) {
+        Player p = event.getPlayer();
+        if ((a = getManager().getArena(p)) != null) {
             if (a.voting) {
                 if (event.getAction() == Action.RIGHT_CLICK_AIR || event.getAction() == Action.RIGHT_CLICK_BLOCK) {
-                    Player p = event.getPlayer();
                     event.setCancelled(true);
                     if (a.currentVotedPlayer.getPlayer() == p) {
                         p.sendMessage(ChatColor.RED + getTr("26"));
@@ -82,9 +82,8 @@ public class GameListener implements Listener {
 
     @EventHandler
     public void PlayerCommand(PlayerCommandPreprocessEvent event) {
-        if (getManager().getArena(event.getPlayer()) != null) {
-            Arena a = getManager().getArena(event.getPlayer());
             Player p = event.getPlayer();
+        if (getManager().getArena(p) != null) {
             ArrayList<String> list = (ArrayList<String>) plugin.getConfig().getStringList("CmdWhitelist");
             for (String s : list) {
                 if (event.getMessage().toLowerCase().startsWith("/" + s)) {
