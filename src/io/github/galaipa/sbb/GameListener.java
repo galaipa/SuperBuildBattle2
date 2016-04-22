@@ -1,5 +1,6 @@
 package io.github.galaipa.sbb;
 
+import static io.github.galaipa.sbb.ArenaManager.am;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
@@ -95,25 +96,21 @@ public class GameListener implements Listener {
         }
     }
 
-    @EventHandler
+@EventHandler
     public void CuboidProtection(BlockBreakEvent event) {
-        Arena a;
-        if ((a = getManager().getArena(event.getPlayer())) != null) {
+        if (getManager().getArena(event.getPlayer()) != null) {
+            Arena a = getManager().getArena(event.getPlayer());
             if (a.inGame) {
-                if (!a.getArenaPlayer(event.getPlayer()).getCuboid().contains(event.getBlock()) || a.voting) {
+                if (!a.getArenaPlayer(event.getPlayer()).getCuboid().contains(event.getBlock()) && a.voting) {
                     event.setCancelled(true);
                 }
             }
-        }
-    }
-
-    @EventHandler
-    public void CuboidProtection2(BlockPlaceEvent event) {
-        Arena a;
-        if ((a = getManager().getArena(event.getPlayer())) != null) {
-            if (a.inGame) {
-                if (!a.getArenaPlayer(event.getPlayer()).getCuboid().contains(event.getBlock())) {
-                    event.setCancelled(true);
+        }else{
+            for(Arena a : am.arenas){
+                for(Cuboid c : a.cuboid){
+                   if(c.contains(event.getBlock())){
+                       event.setCancelled(true);
+                   }
                 }
             }
         }
