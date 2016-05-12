@@ -1,6 +1,7 @@
 package io.github.galaipa.sbb;
 
 import com.connorlinfoot.titleapi.TitleAPI;
+import static io.github.galaipa.sbb.AdminGui.item;
 import net.milkbowl.vault.economy.EconomyResponse;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -13,6 +14,7 @@ import java.util.List;
 import java.util.Random;
 
 import static io.github.galaipa.sbb.SuperBuildBattle.getTr;
+import org.bukkit.Material;
 
 public class ArenaManager {
     public static Boolean admin = false;
@@ -86,6 +88,7 @@ public class ArenaManager {
                     ArenaPlayer j = new ArenaPlayer(p, a.getID(), l);
                     a.getPlayers().add(j);
                     p.teleport(a.getLobby());
+                    p.getInventory().setItem(8, item(Material.BED, 0, 1, ChatColor.RED + getTr("38")));
                     //  p.sendMessage(ChatColor.YELLOW + "[Build Battle] " +ChatColor.GREEN +"You joined arena " + a.getID() + "/" + arenas.size());
                     p.sendMessage(ChatColor.YELLOW + "[Build Battle] " + ChatColor.GREEN + getTr("39").replace("{1}", j.getID() + "/" + a.maxPlayers).replace("{2}", a.getID() + "/" + arenas.size()));
                     if (a.players.size() == a.minPlayers) {

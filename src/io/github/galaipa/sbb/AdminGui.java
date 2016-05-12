@@ -19,6 +19,7 @@ import java.util.Map;
 
 import static io.github.galaipa.sbb.ArenaManager.getManager;
 import static io.github.galaipa.sbb.InGameGui.myInventory;
+import static io.github.galaipa.sbb.SuperBuildBattle.getTr;
 import org.bukkit.event.block.BlockPlaceEvent;
 
 public class AdminGui implements Listener {
@@ -236,6 +237,16 @@ public class AdminGui implements Listener {
                                 }
                             }
                         }
+                    }
+                }
+            } else if (event.getPlayer().getItemInHand().getType() == Material.BED) {
+                if (getManager().getArena(event.getPlayer()) != null) {
+                    ItemStack item = p.getItemInHand();
+                    if (item.hasItemMeta() && item.getItemMeta().hasDisplayName()) {
+                            if (item.getItemMeta().getDisplayName().equalsIgnoreCase(ChatColor.RED + getTr("38"))) {
+                                ArenaManager.getManager().removePlayer(p, true);
+                                p.sendMessage(ChatColor.RED + getTr("3"));
+                            }
                     }
                 }
             }
