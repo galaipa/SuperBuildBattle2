@@ -1,6 +1,11 @@
 package io.github.galaipa.sbb;
 
-import org.bukkit.*;
+import org.bukkit.Chunk;
+import org.bukkit.GameMode;
+import org.bukkit.Location;
+import org.bukkit.Material;
+import org.bukkit.WeatherType;
+import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
@@ -13,7 +18,6 @@ public class ArenaPlayer {
     ItemStack[] armor;
     ItemStack[] inv;
     private int arenaID;
-    private Player p;
     private int point;
     private Cuboid cuboid;
     private Location startLoc;
@@ -22,22 +26,23 @@ public class ArenaPlayer {
     private byte data;
     private int exp;
     private long time;
-    private WeatherType weather;
+   private WeatherType weather;
     private GameMode gamemode;
 
     public ArenaPlayer(Player p2, int arenaID, Location l) {
-        p = p2;
+        player = p2;
         point = 0;
         id = ArenaManager.getManager().getArena(arenaID).getPlayers().size() + 1;
         this.arenaID = arenaID;
-        inv = p.getInventory().getContents();
-        armor = p.getInventory().getArmorContents();
-        p.getInventory().setArmorContents(null);
-        p.getInventory().clear();
+        inv = player.getInventory().getContents();
+        armor = player.getInventory().getArmorContents();
+        player.getInventory().setArmorContents(null);
+        player.getInventory().clear();
         startLoc = l;
-        exp = p.getLevel();
+        exp = player.getLevel();
         time = 6000;
-        gamemode = p.getGameMode();
+        weather = WeatherType.CLEAR;
+        gamemode = player.getGameMode();
     }
 
     public int getArenaID() {
@@ -83,7 +88,7 @@ public class ArenaPlayer {
     }
 
     public Player getPlayer() {
-        return p;
+        return player;
     }
 
     public World getWorld() {
@@ -112,14 +117,14 @@ public class ArenaPlayer {
     }
 
     public String getPlayerString() {
-        return p.getName();
+        return player.getName();
     }
 
     public void returnInv() {
-        p.getInventory().setContents(inv);
-        p.getInventory().setArmorContents(armor);
-        p.setLevel(exp);
-        p.setGameMode(gamemode);
+        player.getInventory().setContents(inv);
+        player.getInventory().setArmorContents(armor);
+        player.setLevel(exp);
+        player.setGameMode(gamemode);
     }
 
     public void returnInv(Player p1) {
@@ -137,12 +142,12 @@ public class ArenaPlayer {
         return time;
     }
 
-    public void setTime(int t) {
-        player.setPlayerTime((long) t, false);
+    public void setTime(long t) {
+        player.setPlayerTime(t, false);
         time = t;
     }
 
-    public WeatherType getWeather() {
+  public WeatherType getWeather() {
         if (weather == null) {
             return WeatherType.CLEAR;
         }
@@ -153,5 +158,5 @@ public class ArenaPlayer {
         player.setPlayerWeather(t);
         weather = t;
     }
-}
 
+}

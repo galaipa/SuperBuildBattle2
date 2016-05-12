@@ -8,7 +8,6 @@ import org.bukkit.WeatherType;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
-import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
@@ -187,10 +186,10 @@ public class InGameGui implements Listener {
                         return;
                     }
                     if (izena.equalsIgnoreCase(ChatColor.BLUE + "Rain")) {
-                        player.setPlayerWeather(WeatherType.DOWNFALL);
+                        t.setWeather(WeatherType.DOWNFALL);
                         player.closeInventory();
                     } else if (izena.equalsIgnoreCase(ChatColor.RED + "Sun")) {
-                        player.setPlayerWeather(WeatherType.CLEAR);
+                        t.setWeather(WeatherType.CLEAR);
                         player.closeInventory();
                     }
                 }
@@ -208,6 +207,7 @@ public class InGameGui implements Listener {
                     if (izena.equalsIgnoreCase(ChatColor.BLUE + "6:00")) {
                         t.setTime(0);
                         player.closeInventory();
+                        return;
                     } else if (izena.equalsIgnoreCase(ChatColor.BLUE + "12:00")) {
                         t.setTime(6000);
                         player.closeInventory();
@@ -216,6 +216,7 @@ public class InGameGui implements Listener {
                         player.closeInventory();
                     } else if (izena.equalsIgnoreCase(ChatColor.BLUE + "24:00")) {
                         t.setTime(18000);
+                         player.setPlayerTime(18000, false);
                         player.closeInventory();
                     } else if (izena.equalsIgnoreCase(ChatColor.BLUE + "3:00")) {
                         t.setTime(21000);
