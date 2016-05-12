@@ -101,7 +101,8 @@ public class GameListener implements Listener {
         if (getManager().getArena(event.getPlayer()) != null) {
             Arena a = getManager().getArena(event.getPlayer());
             if (a.inGame) {
-                if (!a.getArenaPlayer(event.getPlayer()).getCuboid().contains(event.getBlock()) && a.voting) {
+              
+                if (!a.getArenaPlayer(event.getPlayer()).getCuboid().contains(event.getBlock()) || a.voting) {
                     event.setCancelled(true);
                 }
             }
@@ -109,6 +110,27 @@ public class GameListener implements Listener {
             for(Arena a : am.arenas){
                 for(Cuboid c : a.cuboid){
                    if(c.contains(event.getBlock())){
+                       event.setCancelled(true);
+                   }
+                }
+            }
+        }
+    }
+@EventHandler
+    public void CuboidProtection2(BlockPlaceEvent event) {
+        if (getManager().getArena(event.getPlayer()) != null) {
+            Arena a = getManager().getArena(event.getPlayer());
+            if (a.inGame) {
+                Cuboid c2 = a.getArenaPlayer(event.getPlayer()).getCuboid().shift(Cuboid.CuboidDirection.Down, 2);
+                if (!c2.contains(event.getBlock()) || a.voting) {
+                    event.setCancelled(true);
+                }
+            }
+        }else{
+            for(Arena a : am.arenas){
+                for(Cuboid c : a.cuboid){
+                   Cuboid c2 = c.shift(Cuboid.CuboidDirection.Down, 2);
+                   if(c2.contains(event.getBlock())){
                        event.setCancelled(true);
                    }
                 }
@@ -162,6 +184,8 @@ public class GameListener implements Listener {
                /* if (ArenaManager.WorldGuarda) {
                     WorldGuardOptional.WGregionRM(a.getArenaPlayer(e.getPlayer()).getID(), a.getID());
                 }*/
+            }else{
+                a.reassignID();
             }
             Offline.put(p.getName(), j);
             a.players.remove(j);

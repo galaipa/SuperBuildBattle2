@@ -13,14 +13,14 @@ import org.bukkit.inventory.ItemStack;
 
 
 public class ArenaPlayer {
-    private final int id;
+    private int id;
     public Player player;
     ItemStack[] armor;
     ItemStack[] inv;
     private int arenaID;
     private int point;
     private Cuboid cuboid;
-    private Location startLoc;
+    private Location startLoc,spawn;
     private World world;
     private int type;
     private byte data;
@@ -52,6 +52,9 @@ public class ArenaPlayer {
     public int getID() {
         return id;
     }
+    public void setID(Integer id2) {
+        id = id2;
+    }
 
     public void addRegion(Cuboid c) {
         //  cuboid = new Cuboid(l1,l2);
@@ -63,6 +66,8 @@ public class ArenaPlayer {
             type = block.getTypeId();
             break;
         }
+        setSpawnPoint();
+        resetArenas();
     }
 
     public void resetArenas() {
@@ -106,10 +111,13 @@ public class ArenaPlayer {
     public void addPoint(int p) {
         point = point + p;
     }
-
+    public void setSpawnPoint(){
+        Location center = cuboid.getCenter();
+        Location ss = new Location(center.getWorld(),center.getX(),cuboid.getUpperY()-2,center.getZ());
+        spawn = ss;
+    }
     public Location getSpawnPoint() {
-        Location spawnpoint = cuboid.getCenter();
-        return spawnpoint.getWorld().getHighestBlockAt(spawnpoint).getLocation();
+        return spawn;
     }
 
     public Location getPreSpawn() {

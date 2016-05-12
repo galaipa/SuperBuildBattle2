@@ -94,6 +94,7 @@ public class Arena {
     public synchronized void start() {
         if (running) return;
         running = true;
+        reassignID();
         assignArenas();
         //  Broadcast("AssignArenas OK");
         theme = ArenaManager.getManager().getRandomTheme();
@@ -255,9 +256,6 @@ public class Arena {
 
     public void removePlayer(Player p, boolean bo){
         final ArenaPlayer j2 = getArenaPlayer(p);
-        if (inGame) {
-            j2.resetArenas();
-        }
         p.setGameMode(GameMode.SURVIVAL);
         Location globalLobby = ArenaManager.getManager().getGlobalLobby();
         if(globalLobby != null && globalLobby.getWorld() != null){
@@ -284,6 +282,18 @@ public class Arena {
         } else {
             p.sendMessage(ChatColor.GREEN + "[Build Battle] " + ChatColor.RED + getTr("3"));
             Broadcast(ChatColor.GREEN + "[Build Battle] " + ChatColor.RED + p.getName() + " " + getTr("4"));
+        }
+        if (inGame) {
+            j2.resetArenas();
+        }else{
+            reassignID();
+        }
+    }
+    public void reassignID(){
+        int ida = 0;
+        for(ArenaPlayer j : getPlayers()){
+            ida++;
+            j.setID(ida);
         }
     }
 
