@@ -1,40 +1,41 @@
-1: No tienes permisos.
-2: Comando invalido.
-3: Has salido de la arena.
-4: ha salido de la arena.
-5: No estas en el juego
-6: Todos han salido del juego
-7: Ya estas en el juego
-8: El juego ya ha empezado.
-9: Arena llena.
-10: se ha unido al juego
-11: El juego empezará pronto
+#This is an official translation but it can contain errors. Please report them on https://github.com/galaipa/SuperBuildBattle2
+1: No tienes permiso
+2: Comando invalido
+3: Has abandonado la partida
+4: abandono la partida
+5: No estas en una partida
+6: Todos abandonaron la partida
+7: Ya estas en la partida
+8: La partida ya inicio
+9: Arena llena
+10: se a unido a la partida
+11: La partida va a iniciar pronto
 12: Numero de jugadores
-13: El juego empezará ahora.
-14: ¡Buena suerte!
-15: Tinees
-16: minutos para construir algo relacionado con el tema
+13: La partida va a iniciar ahora
+14: Buena suerte!
+15: Tu tienes
+16: Minutos para construir algo relacionado con el tema
 17: Tema
 18: Tiempo
-19: Equipo
-20: La arena ha terminado, gracías por jugar
-21: ¡Hora de votar! Tienes 30 segundos para votar cada plot.
+19: Jugador
+20: El juego a terminado ahora tienen que votar
+21: Hora de votar tienes 30 segundos para votar en cada parcela
 22: Ganador
-23: Otros jugadores
-24: Puntos
-25: Solo puedes votar 1 vez.
-26: No te puedes votar a ti mismo.
-27: Tu seleccion
-28: Entrar
-29: minutos
-30: Muy bueno
-31: Bueno
-32: Malo
-33: Muy malo
-34: Has ganado
-35: Malisimo
-36: Epico
-37: Vota
-38: Salir
-38: Has entrado al juego (Jugador {1}, Arena {2})
-39: Tu seleccion
+23: Rest #String was not translated
+24: puntos
+25: Solo puedes votar una vez
+26: No puedes votar por ti mismo
+27: Tu selecciÃ³n
+28: Ãšnete
+29: minutos restantes
+30: Muy bien
+31: Bien
+32: Mal
+33: Muy mal
+34: Haz ganado
+35: Horrible
+36: Ã‰pico
+37: Da tu voto
+38: Abandona
+39: Haz haz unido a la partida (Jugador {1}, Arena {2})
+40: Your selection #String was not translated
