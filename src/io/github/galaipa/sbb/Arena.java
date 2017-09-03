@@ -400,12 +400,13 @@ public class Arena {
                     for (ArenaPlayer p : players) {
                         p.getPlayer().setLevel(a);
                     }
+                    Broadcast("Game starts in: " + a);
                     a--;
                 }
                 if (a == 3 || a == 2 || a == 1) {
                     for (ArenaPlayer j : players) {
                         Player p = j.getPlayer();
-                          if(ArenaManager.Sounds){p.getWorld().playSound(p.getLocation(), Sound.UI_BUTTON_CLICK, 10, 1);}
+                        if(ArenaManager.Sounds){p.getWorld().playSound(p.getLocation(), Sound.UI_BUTTON_CLICK, 10, 1);}
                         ArenaManager.sendTitle(p, 20, 40, 20, ChatColor.YELLOW + Integer.toString(a), "");
                     }
                 }

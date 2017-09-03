@@ -16,9 +16,11 @@ import org.bukkit.inventory.meta.SkullMeta;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.List;
+import java.util.ArrayList;
 
-import static io.github.galaipa.sbb.AdminGui.item;
 import static io.github.galaipa.sbb.ArenaManager.getManager;
+import org.bukkit.inventory.meta.ItemMeta;
 
 
 public class InGameGui implements Listener {
@@ -257,6 +259,23 @@ public class InGameGui implements Listener {
         }
     }
 
+    public static ItemStack item(Material material, int id, int amount, String name, String lore) {
+        ItemStack b = new ItemStack(material, amount, (short) id);
+        ItemMeta metaB = b.getItemMeta();
+        metaB.setDisplayName(name);
+        List<String> lorea = new ArrayList<>();
+        lorea.add(lore);
+        metaB.setLore(lorea);
+        b.setItemMeta(metaB);
+        return b;
+}
+    public static ItemStack item(Material material, int id, int amount, String name) {
+        ItemStack b = new ItemStack(material, amount, (short) id);
+        ItemMeta metaB = b.getItemMeta();
+        metaB.setDisplayName(name);
+        b.setItemMeta(metaB);
+        return b;
+    }
 
 }
 

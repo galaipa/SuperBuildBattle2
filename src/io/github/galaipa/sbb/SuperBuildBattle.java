@@ -20,7 +20,13 @@ import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
+import java.io.IOException;
+import java.io.Reader;
+import org.apache.commons.io.IOUtils;
+import org.apache.commons.io.input.CharSequenceReader;
+
 import static io.github.galaipa.sbb.ArenaManager.debug;
+
 
 
 public class SuperBuildBattle extends JavaPlugin {
@@ -137,9 +143,8 @@ public class SuperBuildBattle extends JavaPlugin {
                 sender.sendMessage(ChatColor.GREEN + "[Build Battle] " + ChatColor.RED + "You don't have permission");
                 return true;
             } else if (args.length == 0) {
-                ArenaManager.admin = true;
-                AdminGui.arenaGui(p);
-                p.sendMessage(ChatColor.YELLOW + "[Build Battle] " + ChatColor.GREEN + "Use the items in your hand to setup SuperBuildBattle");
+                AdminGui.newAdmin(p);
+                p.sendMessage(ChatColor.YELLOW + "[Build Battle] " + ChatColor.GREEN + "Use the items in your hand to setup SuperBuildBattle\n\n");
             } else if (args[0].equalsIgnoreCase("start")) {
                 if (args.length < 2) {
                     p.sendMessage(ChatColor.YELLOW + "[Build Battle] " + ChatColor.RED + "You must specify the arena number");
@@ -271,7 +276,14 @@ public class SuperBuildBattle extends JavaPlugin {
         } else {
             InputStream defaultStream = getResource(translation + ".yml");
             if (defaultStream != null) {
-                yaml = YamlConfiguration.loadConfiguration(defaultStream);
+                Reader r;
+		try {
+                    r = this.getReaderFromStream(defaultStream);
+                    yaml =  YamlConfiguration.loadConfiguration(r);
+	            r.close();
+		} catch (IOException e) {
+                    e.printStackTrace();
+				}
             } else {
                 System.out.println("[SuperBuildBattle] " + translation + ".yml" + " missing! Add it in " + languageDir.getPath());
                 Bukkit.getPluginManager().disablePlugin(this);
@@ -301,5 +313,12 @@ public class SuperBuildBattle extends JavaPlugin {
             e.printStackTrace();
         }
     }
+     public Reader getReaderFromStream(InputStream initialStream) 
+              throws IOException {
+
+                byte[] buffer = IOUtils.toByteArray(initialStream);
+                Reader targetReader = new CharSequenceReader(new String(buffer));
+                return targetReader;
+            }
 
 }
