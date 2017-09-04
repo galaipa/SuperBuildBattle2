@@ -8,23 +8,23 @@
 7: Ya estas en la partida
 8: La partida ya inicio
 9: Arena llena
-10: se a unido a la partida
-11: La partida va a iniciar pronto
+10: se ha unido a la partida
+11: La partida empezara pronto
 12: Numero de jugadores
-13: La partida va a iniciar ahora
+13: La partida empezara ahora
 14: Buena suerte!
 15: Tu tienes
 16: Minutos para construir algo relacionado con el tema
 17: Tema
 18: Tiempo
 19: Jugador
-20: El juego a terminado ahora tienen que votar
-21: Hora de votar tienes 30 segundos para votar en cada parcela
+20: El juego ha terminado, es hora de votar!
+21: Opina sobre las construcciones de los demas!
 22: Ganador
-23: Rest #String was not translated
+23: Los demas
 24: puntos
 25: Solo puedes votar una vez
-26: No puedes votar por ti mismo
+26: No puedes votar tu construccion
 27: Tu selección
 28: Únete
 29: minutos restantes
@@ -32,10 +32,10 @@
 31: Bien
 32: Mal
 33: Muy mal
-34: Haz ganado
+34: Has ganado
 35: Horrible
 36: Épico
-37: Da tu voto
-38: Abandona
-39: Haz haz unido a la partida (Jugador {1}, Arena {2})
-40: Your selection #String was not translated
+37: Votar
+38: Salir
+39: Te has unido a la partida (Jugador {1}, Arena {2})
+40: Tu opinion #String was not translated

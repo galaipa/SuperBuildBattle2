@@ -92,7 +92,7 @@ public class GameListener implements Listener {
                 }
             }
             event.setCancelled(true);
-            p.sendMessage(ChatColor.GREEN + "[BuildBattle]" + ChatColor.RED + "You can't use command during the game");
+            p.sendMessage(ChatColor.GREEN + "[BuildBattle]" + ChatColor.RED + "You can't do that!");
         }
     }
 
