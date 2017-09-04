@@ -1,7 +1,6 @@
 package me.hfox.spigboard;
 
 import com.google.common.base.Splitter;
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.scoreboard.Score;
 import org.bukkit.scoreboard.Team;
@@ -60,9 +59,9 @@ public class SpigboardEntry {
     }
 
     public void setValue(int value) {
-        if (!score.isScoreSet()) {
+        /*if (!score.isScoreSet()) {
             score.setScore(-1);
-        }
+        }*/
 
         score.setScore(value);
     }
