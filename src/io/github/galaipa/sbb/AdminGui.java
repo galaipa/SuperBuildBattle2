@@ -48,10 +48,10 @@ public class AdminGui implements Listener {
             if(admins.contains(event.getPlayer())){
                 event.setCancelled(true);
                 Player p = event.getPlayer();
-                String izena = p.getInventory().getItemInMainHand().getItemMeta().getDisplayName();
+                String izena =getHand(p).getItemMeta().getDisplayName();
                 izena = ChatColor.stripColor(ChatColor.translateAlternateColorCodes('&', izena));
                 if(izena.startsWith("Arena")){
-                    arenaId = p.getInventory().getItemInMainHand().getAmount();
+                    arenaId = getHand(p).getAmount();
                     guiArena(p);
                 }
                 switch(izena){
@@ -98,7 +98,7 @@ public class AdminGui implements Listener {
                         eCloseMenu(p);
                 }
             }else if(getManager().getArena(event.getPlayer()) != null){
-                ItemStack i = event.getPlayer().getInventory().getItemInMainHand();
+                ItemStack i = getHand(event.getPlayer());
                 if(i.getType() == Material.BED){
                     boolean cancel = eLeave(event.getPlayer());
                     event.setCancelled(cancel);
@@ -115,8 +115,8 @@ public class AdminGui implements Listener {
     public void onBlockPlace(BlockPlaceEvent event) {
         if(admins.contains(event.getPlayer())){
             Player p = event.getPlayer();
-            if(p.getInventory().getItemInMainHand().hasItemMeta() && p.getInventory().getItemInMainHand().getItemMeta().hasDisplayName()){
-                String izena = p.getInventory().getItemInMainHand().getItemMeta().getDisplayName();
+            if(getHand(p).hasItemMeta() && getHand(p).getItemMeta().hasDisplayName()){
+                String izena = getHand(p).getItemMeta().getDisplayName();
                 izena = ChatColor.stripColor(ChatColor.translateAlternateColorCodes('&', izena));
                 switch(izena){
                     case "Point A":
@@ -205,7 +205,7 @@ public class AdminGui implements Listener {
     }
     public void eLobby(Player p){
         spawnpoint = p.getLocation();
-        p.sendMessage(ChatColor.YELLOW + "[Build Battle] " + ChatColor.GREEN + "Lobby set to: " + p.getLocation() + "\n\n");
+        p.sendMessage(ChatColor.YELLOW + "[Build Battle] " + ChatColor.GREEN + "Lobby set\n\n");
     }
     public void eNextStep(Player p){
         if(spawnpoint == null){
@@ -215,7 +215,7 @@ public class AdminGui implements Listener {
         }
     }
     public void eNextCuboid(Player p){
-        int id = p.getInventory().getItemInMainHand().getAmount();
+        int id = getHand(p).getAmount();
         if (location1.get(id) == null || location2.get(id) == null) {
             p.sendMessage(ChatColor.YELLOW + "[Build Battle] " + ChatColor.RED + "Points missing\n\n");
         } else {
@@ -231,14 +231,14 @@ public class AdminGui implements Listener {
         }
     }
     public void ePointA(Player p,Location loc){
-        int id = p.getInventory().getItemInMainHand().getAmount();
+        int id = getHand(p).getAmount();
         location1.put(id, loc);
-        p.sendMessage(ChatColor.YELLOW + "[Build Battle] " + ChatColor.GREEN + "Point A set to " + loc);
+        p.sendMessage(ChatColor.YELLOW + "[Build Battle] " + ChatColor.GREEN + "Point A set");
     }
     public void ePointB(Player p,Location loc){
-        int id = p.getInventory().getItemInMainHand().getAmount();
+        int id = getHand(p).getAmount();
         location2.put(id, loc);
-        p.sendMessage(ChatColor.YELLOW + "[Build Battle] " + ChatColor.GREEN + "Point B set to " + loc);
+        p.sendMessage(ChatColor.YELLOW + "[Build Battle] " + ChatColor.GREEN + "Point B set");
     }
     public void eForceStart(Player p){
         Arena a = ArenaManager.getManager().getArena(arenaId);
@@ -257,7 +257,7 @@ public class AdminGui implements Listener {
         eCloseMenu(p);
     }
     public boolean eLeave(Player p){
-        ItemStack i = p.getInventory().getItemInMainHand();
+        ItemStack i = getHand(p);
         if (i.hasItemMeta() && i.getItemMeta().hasDisplayName()) {
             if (i.getItemMeta().getDisplayName().equalsIgnoreCase(ChatColor.RED + getTr("38"))) {
                 ArenaManager.getManager().removePlayer(p, true);
@@ -268,7 +268,7 @@ public class AdminGui implements Listener {
         return false;
     }
     public boolean eMenu(Player p){
-        ItemStack i = p.getInventory().getItemInMainHand();
+        ItemStack i = getHand(p);
         if (i.hasItemMeta() && i.getItemMeta().hasDisplayName()) {
             if (i.getItemMeta().getDisplayName().equalsIgnoreCase(ChatColor.BLUE + "Menu")) {
                 p.openInventory(myInventory);
@@ -299,7 +299,7 @@ public class AdminGui implements Listener {
         return b;
     }
     public void addOne(Player p){
-        ItemStack i = p.getInventory().getItemInMainHand();
+        ItemStack i = getHand(p);
         p.getInventory().remove(i);
         i.setAmount(i.getAmount() + 1);
         p.getInventory().addItem(i);
@@ -311,8 +311,15 @@ public class AdminGui implements Listener {
         guiArenas(p);
     }
     
-    
-    
+    private ItemStack getHand(Player p){
+        ItemStack item;
+        if(SuperBuildBattle.version.startsWith("1.8")){
+            item = p.getItemInHand();
+        }else{
+           item = p.getInventory().getItemInMainHand();
+        }
+        return item;
+    }    
 }
 
 

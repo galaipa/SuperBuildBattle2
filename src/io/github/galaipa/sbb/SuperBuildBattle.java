@@ -34,6 +34,7 @@ public class SuperBuildBattle extends JavaPlugin {
     public static String translation;
     public static YamlConfiguration yaml;
     public Economy econ = null;
+    public static String version;
 
     public static SuperBuildBattle getInstance() {
         return JavaPlugin.getPlugin(SuperBuildBattle.class);
@@ -67,6 +68,7 @@ public class SuperBuildBattle extends JavaPlugin {
         getConfig().options().copyDefaults(true);
         getConfig().options().copyHeader(true);
         saveConfig();
+        version = Bukkit.getVersion();
 
         getServer().getPluginManager().registerEvents(new SignListener(this), this);
         getServer().getPluginManager().registerEvents(new GameListener(), this);
@@ -79,7 +81,7 @@ public class SuperBuildBattle extends JavaPlugin {
         } else {
             ArenaManager.PlayerPoints = false;
         }
-        ArenaManager.Sounds = getConfig().getBoolean("Sounds");
+        ArenaManager.Sounds = !version.startsWith("1.8");
         if ((getConfig().getBoolean("Rewards.Vault.Enabled"))) {
             if (!setupEconomy()) {
                 ArenaManager.Vault = false;
@@ -106,6 +108,7 @@ public class SuperBuildBattle extends JavaPlugin {
         ArenaManager.debug = getConfig().getBoolean("Debug");
         ArenaManager.WorldGuarda = getServer().getPluginManager().getPlugin("WorldGuard") != null;
         ArenaManager.getManager().loadArenas();
+        
     }
 
     @Override
@@ -314,11 +317,10 @@ public class SuperBuildBattle extends JavaPlugin {
         }
     }
      public Reader getReaderFromStream(InputStream initialStream) 
-              throws IOException {
-
-                byte[] buffer = IOUtils.toByteArray(initialStream);
-                Reader targetReader = new CharSequenceReader(new String(buffer));
-                return targetReader;
-            }
+         throws IOException {
+            byte[] buffer = IOUtils.toByteArray(initialStream);
+            Reader targetReader = new CharSequenceReader(new String(buffer));
+            return targetReader;
+        }
 
 }
